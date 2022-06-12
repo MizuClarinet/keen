@@ -1,4 +1,4 @@
-package keen;
+package wtf.mizu.keen;
 
 /**
  * A Bus is an object used to publish events and allow subscriptions to consume them.

@@ -1,4 +1,4 @@
-package keen;
+package wtf.mizu.keen;
 
 import java.util.Set;
 

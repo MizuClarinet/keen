@@ -3,10 +3,12 @@ plugins {
     `maven-publish`
     signing
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
+    id("com.github.jmongard.git-semver-plugin") version "0.4.2"
 }
 
 group = "wtf.mizu.keen"
-version = "1.0-SNAPSHOT"
+version = semver.version
+println(version)
 
 subprojects {
     apply(plugin = "maven-publish")

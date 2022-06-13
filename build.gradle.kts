@@ -40,6 +40,7 @@ subprojects {
         create("mavenJava", MavenPublication::class.java) {
             from(components["java"])
             groupId = project.group.toString()
+            version = project.version.toString()
 
             signing {
                 isRequired = project.properties["signing.keyId"] != null

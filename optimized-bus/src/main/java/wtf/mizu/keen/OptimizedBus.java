@@ -1,5 +1,6 @@
 package wtf.mizu.keen;
 
+import wtf.mizu.keen.registry.EmptySubscriptionRegistry;
 import wtf.mizu.keen.registry.SingletonSubscriptionRegistry;
 import wtf.mizu.keen.registry.SubscriptionRegistry;
 
@@ -18,7 +19,9 @@ public class OptimizedBus implements Bus {
      */
     @Override
     public <T> void publish(T event) {
-        topicToSubscriptions.get(event.getClass()).publish(event);
+        final var registry = topicToSubscriptions.get(event.getClass());
+        if(registry != null)
+            registry.publish(event);
     }
 
     /**
@@ -30,13 +33,11 @@ public class OptimizedBus implements Bus {
     @SuppressWarnings("unchecked")
     @Override
     public <T> void add(Subscription<T> subscription) {
-        for(final var clazz: subscription.topics()) {
-            final var registry = topicToSubscriptions.get(clazz);
-            if(registry == null) {
-                topicToSubscriptions.put(clazz, new SingletonSubscriptionRegistry<>((Subscription<Object>) subscription));
-            } else {
-                topicToSubscriptions.put(clazz, registry.add((Subscription<Object>) subscription));
-            }
+        final var registry = topicToSubscriptions.get(subscription.topic());
+        if(registry == null) {
+            topicToSubscriptions.put(subscription.topic(), new SingletonSubscriptionRegistry<>((Subscription<Object>) subscription));
+        } else {
+            topicToSubscriptions.put(subscription.topic(), registry.add((Subscription<Object>) subscription));
         }
     }
 
@@ -49,13 +50,13 @@ public class OptimizedBus implements Bus {
     @SuppressWarnings("unchecked")
     @Override
     public <T> void remove(Subscription<T> subscription) {
-        for(final var clazz: subscription.topics()) {
-            final var registry = topicToSubscriptions.get(clazz);
-            if(registry == null) {
-                return;
-            } else {
-                topicToSubscriptions.put(clazz, registry.remove((Subscription<Object>) subscription));
+        final var registry = topicToSubscriptions.get(subscription.topic());
+        if(registry != null) {
+            final var removedRegistry = registry.remove((Subscription<Object>) subscription);
+            if(removedRegistry instanceof EmptySubscriptionRegistry<?>) {
+                topicToSubscriptions.remove(subscription.topic());
             }
+            topicToSubscriptions.put(subscription.topic(), removedRegistry);
         }
     }
 }

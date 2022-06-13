@@ -18,7 +18,7 @@ public interface Subscription<T> {
      *
      * @return The topics
      */
-    Set<Class<? super T>> topics();
+    Class<T> topic();
 
     /**
      * Returns an integer used to sort subscriptions and invoke them in a specific order

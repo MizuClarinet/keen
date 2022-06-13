@@ -9,15 +9,13 @@ inline fun listener(crossinline block: ListenerDSL.() -> Unit)
         = ListenerDSL().apply(block)
 
 inline fun <reified T: Any> Listener.on(crossinline block: T.() -> Unit) = object: Subscription<T> {
-    override fun topics() = T::class.java.superclasses
+    override fun topic() = T::class.java
     override fun priority() = 0
     override fun consume(event: T) {
         block(event)
     }
 }.also { subscription ->
-    subscription.topics().forEach { topic ->
-        subscriptions()
-            .getOrPut(topic) { mutableListOf() }
-            .add(subscription)
-    }
+    subscriptions()
+        .getOrPut(subscription.topic()) { mutableListOf() }
+        .add(subscription)
 }

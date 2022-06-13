@@ -14,9 +14,10 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
 
     @Override
     public SubscriptionRegistry<T> add(Subscription<T> subscription) {
-        if(subscriptions.contains(subscription)) {
+        if(!subscriptions.contains(subscription)) {
             subscriptions.add(subscription);
         }
+        subscriptions.sort((o1, o2) -> o2.priority() - o1.priority());
         return this;
     }
 
@@ -25,6 +26,7 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
         subscriptions.remove(subscription);
         if(subscriptions.size() == 1)
             return new SingletonSubscriptionRegistry<>(subscriptions.get(0));
+        subscriptions.sort((o1, o2) -> o2.priority() - o1.priority());
         return this;
     }
 

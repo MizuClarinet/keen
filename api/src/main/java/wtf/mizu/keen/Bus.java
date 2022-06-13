@@ -69,7 +69,7 @@ public interface Bus {
     default void remove(Listener listener)  {
         for(final var subscriptions: listener.subscriptions().values()) {
             for(final var sub: subscriptions)
-                add(sub);
+                remove(sub);
         }
     }
 

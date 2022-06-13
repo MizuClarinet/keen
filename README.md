@@ -6,10 +6,10 @@ A powerful and modular Event Bus.
 
 This library is available in `mavenCentral()`.
 
-```
-implementation("wtf.mizu.keen", "api", "<version>")
-implementation("wtf.mizu.keen", "optimized-bus", "<version>")
-implementation("wtf.mizu.keen", "kotlin-listener-dsl", "<version>")
+```kotlin
+implementation("wtf.mizu.keen", "api", "0.0.1")
+implementation("wtf.mizu.keen", "optimized-bus", "0.0.1")
+implementation("wtf.mizu.keen", "kotlin-listener-dsl", "0.0.1")
 ```
 
 ## How it works

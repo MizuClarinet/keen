@@ -17,6 +17,6 @@ public interface Listener {
      *
      * @return The subscription map
      */
-    Map<Class<?>, List<Subscription<?>>> getSubscriptions();
+    Map<Class<?>, List<Subscription<?>>> subscriptions();
     
 }

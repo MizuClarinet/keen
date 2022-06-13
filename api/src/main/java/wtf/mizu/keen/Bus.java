@@ -55,7 +55,7 @@ public interface Bus {
      * @param listener The {@link Listener}
      */
     default void add(Listener listener)  {
-        for(final var subscriptions: listener.getSubscriptions().values()) {
+        for(final var subscriptions: listener.subscriptions().values()) {
             for(final var sub: subscriptions)
                 add(sub);
         }
@@ -67,7 +67,7 @@ public interface Bus {
      * @param listener The {@link Listener}
      */
     default void remove(Listener listener)  {
-        for(final var subscriptions: listener.getSubscriptions().values()) {
+        for(final var subscriptions: listener.subscriptions().values()) {
             for(final var sub: subscriptions)
                 add(sub);
         }

@@ -13,6 +13,11 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
     }
 
     @Override
+    public List<Subscription<T>> subscriptions() {
+        return subscriptions;
+    }
+
+    @Override
     public SubscriptionRegistry<T> add(Subscription<T> subscription) {
         if(!subscriptions.contains(subscription)) {
             subscriptions.add(subscription);

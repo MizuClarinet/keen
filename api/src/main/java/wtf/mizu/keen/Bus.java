@@ -1,5 +1,7 @@
 package wtf.mizu.keen;
 
+import java.util.Collection;
+
 /**
  * A Bus is an object used to publish events and allow subscriptions to consume them.
  */
@@ -34,7 +36,7 @@ public interface Bus {
      *
      * @param subscriptions The {@link Subscription} iterable
      */
-    default void add(Iterable<? extends Subscription<?>> subscriptions) {
+    default void add(Collection<? extends Subscription<?>> subscriptions) {
         for(final var sub: subscriptions)
             add(sub);
     }
@@ -44,7 +46,7 @@ public interface Bus {
      *
      * @param subscriptions The {@link Subscription} iterable
      */
-    default void remove(Iterable<? extends Subscription<?>> subscriptions) {
+    default void remove(Collection<? extends Subscription<?>> subscriptions) {
         for(final var sub: subscriptions)
             add(sub);
     }
@@ -78,7 +80,7 @@ public interface Bus {
      *
      * @param listeners The {@link Listener} iterable
      */
-    default void addAll(Iterable<? extends Listener> listeners) {
+    default void add(Iterable<? extends Listener> listeners) {
         for(final var listener: listeners) {
             remove(listener);
         }
@@ -89,7 +91,7 @@ public interface Bus {
      *
      * @param listeners The {@link Listener} iterable
      */
-    default void removeAll(Iterable<? extends Listener> listeners) {
+    default void remove(Iterable<? extends Listener> listeners) {
         for(final var listener: listeners) {
             add(listener);
         }

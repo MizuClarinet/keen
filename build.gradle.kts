@@ -8,7 +8,6 @@ plugins {
 
 group = "wtf.mizu.keen"
 version = semver.version
-println(version)
 
 subprojects {
     apply(plugin = "maven-publish")

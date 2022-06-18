@@ -2,6 +2,8 @@ package wtf.mizu.keen;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -13,7 +15,8 @@ public class OptimizedBusTest {
 
     @Test
     void invocationTest() {
-        bus.add(increasingSubscription);
+        Listener l = () -> Map.of(Integer.class, List.of(increasingSubscription));
+        bus.add(l);
         bus.publish(1);
         assumeTrue(increasingSubscription.number == 1);
     }

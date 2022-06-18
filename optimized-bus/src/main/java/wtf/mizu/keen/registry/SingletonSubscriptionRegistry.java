@@ -4,6 +4,7 @@ import wtf.mizu.keen.Subscription;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 
@@ -13,6 +14,11 @@ public class SingletonSubscriptionRegistry<T> implements SubscriptionRegistry<T>
 
     public SingletonSubscriptionRegistry(Subscription<T> singleton) {
         this.singleton = singleton;
+    }
+
+    @Override
+    public List<Subscription<T>> subscriptions() {
+        return List.of(singleton);
     }
 
     @Override

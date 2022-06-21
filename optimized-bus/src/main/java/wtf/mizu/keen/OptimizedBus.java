@@ -1,65 +1,80 @@
 package wtf.mizu.keen;
 
+import org.jetbrains.annotations.NotNull;
+import wtf.mizu.keen.api.Bus;
+import wtf.mizu.keen.api.Listener;
+import wtf.mizu.keen.api.Subscription;
 import wtf.mizu.keen.registry.EmptySubscriptionRegistry;
 import wtf.mizu.keen.registry.OptimizedSubscriptionRegistry;
 import wtf.mizu.keen.registry.SingletonSubscriptionRegistry;
 import wtf.mizu.keen.registry.SubscriptionRegistry;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 
+/**
+ * TODO
+ *
+ * @author Shyrogan
+ * @author lambdagg
+ * @since 0.0.1
+ */
 @SuppressWarnings("unchecked")
 public class OptimizedBus implements Bus {
-
-    private final Map<Class<?>, SubscriptionRegistry<Object>> topicToSubscriptions = new HashMap<>();
+    private final Map<Class<?>, SubscriptionRegistry<Object>> topicToSubscriptionsMap =
+            new HashMap<>();
 
     /**
      * {@inheritDoc}
-     *
-     * @param event The event
-     * @param <T>
      */
     @Override
-    public <T> void publish(T event) {
-        final var registry = topicToSubscriptions.get(event.getClass());
-        if(registry != null)
+    public <T> void publish(@NotNull T event) {
+        final var registry = topicToSubscriptionsMap.get(event.getClass());
+        if (registry != null)
             registry.publish(event);
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @param subscription The {@link Subscription}
-     * @param <T>
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void add(Subscription<T> subscription) {
-        final var registry = topicToSubscriptions.get(subscription.topic());
-        if(registry == null) {
-            topicToSubscriptions.put(subscription.topic(), new SingletonSubscriptionRegistry<>((Subscription<Object>) subscription));
-        } else {
-            topicToSubscriptions.put(subscription.topic(), registry.add((Subscription<Object>) subscription));
-        }
+    public <T> void addSubscription(@NotNull Subscription<T> subscription) {
+        final var topic = subscription.topic();
+        final var registry = topicToSubscriptionsMap.get(topic);
+
+        // TODO maybe we can use compute functions there?
+
+        topicToSubscriptionsMap.put(
+                topic,
+                registry == null ?
+                        new SingletonSubscriptionRegistry<>(
+                                (Subscription<Object>) subscription
+                        ) :
+                        registry.add((Subscription<Object>) subscription)
+        );
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @param subscription The {@link Subscription}
-     * @param <T>
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void remove(Subscription<T> subscription) {
-        final var registry = topicToSubscriptions.get(subscription.topic());
-        if(registry != null) {
-            final var removedRegistry = registry.remove((Subscription<Object>) subscription);
-            if(removedRegistry instanceof EmptySubscriptionRegistry<?>) {
-                topicToSubscriptions.remove(subscription.topic());
+    public <T> void removeSubscription(@NotNull Subscription<T> subscription) {
+        final var topic = subscription.topic();
+        final var registry = topicToSubscriptionsMap.get(topic);
+
+        if (registry != null) {
+            final var removedRegistry = registry.remove(
+                    (Subscription<Object>) subscription
+            );
+
+            if (removedRegistry instanceof EmptySubscriptionRegistry<?>) {
+                topicToSubscriptionsMap.remove(topic);
             }
-            topicToSubscriptions.put(subscription.topic(), removedRegistry);
+
+            topicToSubscriptionsMap.put(topic, removedRegistry);
         }
     }
 
@@ -69,18 +84,38 @@ public class OptimizedBus implements Bus {
      * @param listener The {@link Listener}
      */
     @Override
-    public void add(Listener listener) {
-        for(final var entry: listener.subscriptions().entrySet()) {
-            final var registry = topicToSubscriptions.get(entry.getKey());
-            if(registry == null) {
-                if(entry.getValue().size() == 1) {
-                    topicToSubscriptions.put(entry.getKey(), new SingletonSubscriptionRegistry<>((Subscription<Object>)entry.getValue().get(0)));
+    public <T> void addListener(@NotNull Listener<T> listener) {
+        for (final var entry : listener.subscriptions().entrySet()) {
+            final var topic = entry.getKey();
+            final var subscriptionSet = (SortedSet<Subscription<Object>>)
+                    ((Object) entry.getValue());
+
+            final var registry = topicToSubscriptionsMap.get(topic);
+
+            if (registry == null) {
+                if (entry.getValue().size() == 1) {
+                    topicToSubscriptionsMap.put(
+                            topic,
+                            new SingletonSubscriptionRegistry<>(
+                                    subscriptionSet.first()
+                            )
+                    );
+
                     return;
                 }
-                topicToSubscriptions.put(entry.getKey(), new OptimizedSubscriptionRegistry<>((List<Subscription<Object>>)(Object)entry.getValue()));
-            } else {
-                topicToSubscriptions.put(entry.getKey(), registry.add((List<Subscription<Object>>)(Object)entry.getValue()));
+
+                topicToSubscriptionsMap.put(
+                        topic,
+                        new OptimizedSubscriptionRegistry<>(subscriptionSet)
+                );
+
+                return;
             }
+
+            topicToSubscriptionsMap.put(
+                    topic,
+                    registry.addAll(subscriptionSet)
+            );
         }
     }
 }

@@ -1,78 +1,102 @@
 package wtf.mizu.keen.registry;
 
-import wtf.mizu.keen.Subscription;
+import wtf.mizu.keen.api.Subscription;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
+/**
+ * TODO
+ *
+ * @param <T>
+ * @author Shyrogan
+ * @author lambdagg
+ * @since 0.0.1
+ */
 public interface SubscriptionRegistry<T> {
-
     /**
-     * An immutable {@link List} that returns all the {@link Subscription}
-     * contained by this {@link SubscriptionRegistry}.
+     * The subscription set getter.
      *
-     * @return The subscriptions
+     * @return an immutable {@link SortedSet} that returns all of the
+     * {@link Subscription}s in this {@link SubscriptionRegistry}.
+     * Needs to be synchronized if multiple threads access the same
+     * registry (Collections.synchronizedSortedSet(...)).
      */
-    List<Subscription<T>> subscriptions();
+    SortedSet<Subscription<T>> subscriptions();
 
     /**
-     * Adds given {@link Subscription} to this {@link SubscriptionRegistry}.
+     * Adds the given {@link Subscription} to this {@link SubscriptionRegistry}.
      *
-     * @param subscription The subscription
-     * @return The new subscription registry
+     * @param subscription the subscription.
+     * @return the new subscription registry.
      */
     SubscriptionRegistry<T> add(Subscription<T> subscription);
 
     /**
-     * Removes given {@link Subscription} from this {@link SubscriptionRegistry}.
+     * Removes the given {@link Subscription} from this
+     * {@link SubscriptionRegistry}.
      *
-     * @param subscription The subscription
-     * @return The new subscription registry
+     * @param subscription the subscription.
+     * @return the new subscription registry.
      */
     SubscriptionRegistry<T> remove(Subscription<T> subscription);
 
     /**
-     * Adds given collection of {@link Subscription} to this {@link SubscriptionRegistry}.
+     * Adds the given {@link Subscription} collection to this
+     * {@link SubscriptionRegistry}.
      *
-     * @param subscriptions The subscription
-     * @return The new subscription registry
+     * @param subscriptions the subscription collection.
+     * @return the new subscription registry.
      */
-    default SubscriptionRegistry<T> add(Collection<? extends Subscription<T>> subscriptions) {
-        final var finalSize = subscriptions().size() + subscriptions.size();
-        if(finalSize == 0)
-            return new EmptySubscriptionRegistry<>();
-        if(finalSize == 1)
-            return new SingletonSubscriptionRegistry<>(subscriptions.isEmpty() ? subscriptions().get(0) : subscriptions.iterator().next());
-        final var list = new ArrayList<>(subscriptions());
-        list.addAll(subscriptions);
-        return new OptimizedSubscriptionRegistry<>(list);
-    }
+    default SubscriptionRegistry<T> addAll(
+            Set<? extends Subscription<T>> subscriptions
+    ) {
+        final var newSize = subscriptions().size() + subscriptions.size();
 
-    /**
-     * Removes given collection of {@link Subscription} to this {@link SubscriptionRegistry}.
-     *
-     * @param subscriptions The subscription
-     * @return The new subscription registry
-     */
-    default SubscriptionRegistry<T> remove(Collection<? extends Subscription<T>> subscriptions) {
-        final var list = new ArrayList<>(subscriptions());
-        list.removeAll(subscriptions);
-
-        if(list.size() == 0)
+        if (newSize == 0) {
             return new EmptySubscriptionRegistry<>();
-        if(list.size() == 1) {
-            return new SingletonSubscriptionRegistry<>(list.get(0));
         }
-        return new OptimizedSubscriptionRegistry<>(list);
+
+        if (newSize == 1) {
+            return new SingletonSubscriptionRegistry<>(
+                    subscriptions.isEmpty() ?
+                            subscriptions().first() :
+                            subscriptions.iterator().next()
+            );
+        }
+
+        final var set = new TreeSet<>(subscriptions());
+        set.addAll(subscriptions);
+        return new OptimizedSubscriptionRegistry<>(set);
     }
 
     /**
-     * Publishes given {@link T} event to its {@link Subscription}.
+     * Removes given collection of {@link Subscription} to this
+     * {@link SubscriptionRegistry}.
      *
-     * @param event The event
+     * @param subscriptions the subscription.
+     * @return the new subscription registry.
+     */
+    default SubscriptionRegistry<T> removeAll(
+            Set<? extends Subscription<T>> subscriptions
+    ) {
+        final var set = new TreeSet<>(subscriptions());
+        set.removeAll(subscriptions);
+
+        if (set.size() == 0) {
+            return new EmptySubscriptionRegistry<>();
+        }
+
+        if (set.size() == 1) {
+            return new SingletonSubscriptionRegistry<>(set.first());
+        }
+
+        return new OptimizedSubscriptionRegistry<>(set);
+    }
+
+    /**
+     * Publishes the given event to its {@link Subscription}s.
+     *
+     * @param event the event to be published.
      */
     void publish(T event);
-
-
 }

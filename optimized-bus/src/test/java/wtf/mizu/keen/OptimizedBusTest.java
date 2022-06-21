@@ -1,27 +1,31 @@
 package wtf.mizu.keen;
 
 import org.junit.jupiter.api.Test;
+import wtf.mizu.keen.api.Bus;
+import wtf.mizu.keen.api.Listener;
+import wtf.mizu.keen.api.Subscription;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class OptimizedBusTest {
-
-    private final Bus bus = new OptimizedBus();
-    private final IncreasingSubscription increasingSubscription = new IncreasingSubscription();
+    final Bus bus = new OptimizedBus();
+    final IncreasingSubscription increasingSubscription = new IncreasingSubscription();
 
     @Test
     void invocationTest() {
-        Listener l = () -> Map.of(Integer.class, List.of(increasingSubscription));
-        bus.add(l);
+        SortedSet<Subscription<Integer>> set = new TreeSet<>();
+        set.add(increasingSubscription);
+        Listener<Integer> l = () -> Map.of(Integer.class, set);
+        bus.addListener(l);
         bus.publish(1);
         assumeTrue(increasingSubscription.number == 1);
     }
 
-    public static class IncreasingSubscription implements Subscription<Integer> {
+    static class IncreasingSubscription implements Subscription<Integer> {
         int number;
 
         @Override
@@ -39,5 +43,4 @@ public class OptimizedBusTest {
             number++;
         }
     }
-
 }

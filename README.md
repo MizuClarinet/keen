@@ -1,10 +1,10 @@
-# Keen 🚀 [![CI][badge-ci]][ci] [![badge-mvnc-api] ![badge-mvnc-optimized-bus] ![badge-mvnc-dsl]][project-mvnc]
+# Kawa 🚀 [![CI][badge-ci]][ci] [![badge-mvnc-api] ![badge-mvnc-optimized-bus] ![badge-mvnc-dsl]][project-mvnc]
 
 Open-source, powerful and modular [Kotlin][kotlin]-enhanced event bus for the [JVM][jvm].
 
 ## Importing
 
-You can import [keen][project-url] from [Maven Central][mvnc] by adding it to your dependencies block.
+You can import [kawa][project-url] from [Maven Central][mvnc] by adding it to your dependencies block.
 
 ### Gradle
 
@@ -14,11 +14,11 @@ repositories {
 }
 
 dependencies {
-    implementation("wtf.mizu.keen:api:{LATEST_VERSION}")
-    implementation("wtf.mizu.keen:optimized-bus:{LATEST_VERSION}")
+    implementation("wtf.mizu.kawa:api:{LATEST_VERSION}")
+    implementation("wtf.mizu.kawa:optimized-bus:{LATEST_VERSION}")
 
     // If you're using Kotlin:
-    implementation("wtf.mizu.keen:kotlin-listener-dsl:{LATEST_VERSION}")
+    implementation("wtf.mizu.kawa:kotlin-listener-dsl:{LATEST_VERSION}")
 }
 ```
 
@@ -27,20 +27,20 @@ dependencies {
 ```xml
 <dependencies>
     <dependency>
-        <groupId>wtf.mizu.keen</groupId>
+        <groupId>wtf.mizu.kawa</groupId>
         <artifactId>api</artifactId>
         <version>{LATEST_VERSION}</version>
     </dependency>
 
     <dependency>
-        <groupId>wtf.mizu.keen</groupId>
+        <groupId>wtf.mizu.kawa</groupId>
         <artifactId>optimized-bus</artifactId>
         <version>{LATEST_VERSION}</version>
     </dependency>
 
     <!-- If you're using Kotlin -->
     <dependency>
-        <groupId>wtf.mizu.keen</groupId>
+        <groupId>wtf.mizu.kawa</groupId>
         <artifactId>kotlin-listener-dsl</artifactId>
         <version>{LATEST_VERSION}</version>
     </dependency>
@@ -85,29 +85,29 @@ This project is licensed under [the AGPLv3-only License][license].
 
 <!-- Project Links -->
 
-[project-url]: https://github.com/MizuSoftware/keen "Project homepage"
+[project-url]: https://github.com/MizuSoftware/kawa "Project homepage"
 
-[fork]: https://github.com/MizuSoftware/keen/fork "Fork this repository"
+[fork]: https://github.com/MizuSoftware/kawa/fork "Fork this repository"
 
-[new-pr]: https://github.com/MizuSoftware/keen/pulls/new "Create a new pull request"
+[new-pr]: https://github.com/MizuSoftware/kawa/pulls/new "Create a new pull request"
 
-[new-issue]: https://github.com/MizuSoftware/keen/issues/new "Create a new issue"
+[new-issue]: https://github.com/MizuSoftware/kawa/issues/new "Create a new issue"
 
-[wiki]: https://github.com/MizuSoftware/keen/wiki "Project wiki"
+[wiki]: https://github.com/MizuSoftware/kawa/wiki "Project wiki"
 
-[project-mvnc]: https://search.maven.org/search?g:wtf.mizu.keen "Project Maven Central search"
+[project-mvnc]: https://search.maven.org/search?g:wtf.mizu.kawa "Project Maven Central search"
 
-[ci]: https://github.com/MizuSoftware/keen/actions/workflows/build.yml "Continuous integration"
+[ci]: https://github.com/MizuSoftware/kawa/actions/workflows/build.yml "Continuous integration"
 
-[license]: https://github.com/MizuSoftware/keen/blob/main/LICENSE "LICENSE source file"
+[license]: https://github.com/MizuSoftware/kawa/blob/main/LICENSE "LICENSE source file"
 
 
 <!-- Badges -->
 
-[badge-mvnc-api]: https://maven-badges.herokuapp.com/maven-central/wtf.mizu.keen/api/badge.svg "API Maven Central badge"
+[badge-mvnc-api]: https://maven-badges.herokuapp.com/maven-central/wtf.mizu.kawa/api/badge.svg "API Maven Central badge"
 
-[badge-mvnc-optimized-bus]: https://maven-badges.herokuapp.com/maven-central/wtf.mizu.keen/optimized-bus/badge.svg "optimized-bus Maven Central badge"
+[badge-mvnc-optimized-bus]: https://maven-badges.herokuapp.com/maven-central/wtf.mizu.kawa/optimized-bus/badge.svg "optimized-bus Maven Central badge"
 
-[badge-mvnc-dsl]: https://maven-badges.herokuapp.com/maven-central/wtf.mizu.keen/kotlin-listener-dsl/badge.svg "DSL Maven Central badge"
+[badge-mvnc-dsl]: https://maven-badges.herokuapp.com/maven-central/wtf.mizu.kawa/kotlin-listener-dsl/badge.svg "DSL Maven Central badge"
 
-[badge-ci]: https://github.com/MizuSoftware/keen/actions/workflows/build.yml/badge.svg?branch=main "CI badge"
+[badge-ci]: https://github.com/MizuSoftware/kawa/actions/workflows/build.yml/badge.svg?branch=main "CI badge"

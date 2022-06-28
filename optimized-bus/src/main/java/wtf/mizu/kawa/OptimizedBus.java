@@ -1,13 +1,13 @@
-package wtf.mizu.keen;
+package wtf.mizu.kawa;
 
 import org.jetbrains.annotations.NotNull;
-import wtf.mizu.keen.api.Bus;
-import wtf.mizu.keen.api.Listener;
-import wtf.mizu.keen.api.Subscription;
-import wtf.mizu.keen.registry.EmptySubscriptionRegistry;
-import wtf.mizu.keen.registry.OptimizedSubscriptionRegistry;
-import wtf.mizu.keen.registry.SingletonSubscriptionRegistry;
-import wtf.mizu.keen.registry.SubscriptionRegistry;
+import wtf.mizu.kawa.api.Bus;
+import wtf.mizu.kawa.api.Listener;
+import wtf.mizu.kawa.api.Subscription;
+import wtf.mizu.kawa.registry.EmptySubscriptionRegistry;
+import wtf.mizu.kawa.registry.OptimizedSubscriptionRegistry;
+import wtf.mizu.kawa.registry.SingletonSubscriptionRegistry;
+import wtf.mizu.kawa.registry.SubscriptionRegistry;
 
 import java.util.HashMap;
 import java.util.Map;

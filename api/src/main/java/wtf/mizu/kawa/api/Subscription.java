@@ -1,4 +1,4 @@
-package wtf.mizu.keen.api;
+package wtf.mizu.kawa.api;
 
 /**
  * Consumes event instances.

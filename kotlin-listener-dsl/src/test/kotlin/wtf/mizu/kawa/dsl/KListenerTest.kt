@@ -1,9 +1,9 @@
-package wtf.mizu.keen.dsl
+package wtf.mizu.kawa.dsl
 
 import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.Test
 
-import wtf.mizu.keen.OptimizedBus
+import wtf.mizu.kawa.OptimizedBus
 
 class KListenerTest {
     private val bus = OptimizedBus()

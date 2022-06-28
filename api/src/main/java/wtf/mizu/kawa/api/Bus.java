@@ -1,4 +1,4 @@
-package wtf.mizu.keen.api;
+package wtf.mizu.kawa.api;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -8,12 +8,12 @@ import java.util.*;
  * Used to publish events and allow subscriptions to consume them.
  * <p>
  * You can find an example implementation of this class in the
- * {@code wtf.mizu.keen:optimized-bus} Maven artifact, in the OptimizedBus
+ * {@code wtf.mizu.kawa:optimized-bus} Maven artifact, in the OptimizedBus
  * class.
  *
  * @author Shyrogan
  * @author lambdagg
- * @see <a href="https://github.com/MizuSoftware/keen/blob/main/optimized-bus/src/main/java/wtf/mizu/keen/impl/optimized/OptimizedBus.java">example implementation</a>
+ * @see <a href="https://github.com/MizuSoftware/kawa/blob/main/optimized-bus/src/main/java/wtf/mizu/kawa/impl/optimized/OptimizedBus.java">example implementation</a>
  * @since 0.0.1
  */
 public interface Bus {
@@ -72,6 +72,7 @@ public interface Bus {
      * Registers the given {@link Listener} to this bus.
      *
      * @param listener the {@link Listener}.
+     * @param <T>          the main topic.
      */
     default <T> void addListener(@NotNull Listener<T> listener) {
         for (final var subscriptions : listener.subscriptions().values()) {
@@ -83,6 +84,7 @@ public interface Bus {
      * Unregisters the given {@link Listener} from this bus.
      *
      * @param listener the {@link Listener}.
+     * @param <T>          the main topic.
      */
     default <T> void removeListener(@NotNull Listener<T> listener) {
         for (final var subscriptions : listener.subscriptions().values()) {

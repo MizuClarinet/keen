@@ -6,7 +6,7 @@ plugins {
     id("com.github.jmongard.git-semver-plugin") version "0.4.2"
 }
 
-group = "wtf.mizu.keen"
+group = "wtf.mizu.kawa"
 version = semver.version
 
 subprojects {

@@ -1,13 +1,13 @@
-package wtf.mizu.keen.registry;
+package wtf.mizu.kawa.registry;
 
-import wtf.mizu.keen.api.Subscription;
+import wtf.mizu.kawa.api.Subscription;
 
 import java.util.*;
 
 /**
  * TODO
  *
- * @param <T>
+ * @param <T> the topic.
  * @author Shyrogan
  * @author lambdagg
  * @since 0.0.1

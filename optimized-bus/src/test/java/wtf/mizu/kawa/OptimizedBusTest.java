@@ -1,9 +1,9 @@
-package wtf.mizu.keen;
+package wtf.mizu.kawa;
 
 import org.junit.jupiter.api.Test;
-import wtf.mizu.keen.api.Bus;
-import wtf.mizu.keen.api.Listener;
-import wtf.mizu.keen.api.Subscription;
+import wtf.mizu.kawa.api.Bus;
+import wtf.mizu.kawa.api.Listener;
+import wtf.mizu.kawa.api.Subscription;
 
 import java.util.Map;
 import java.util.SortedSet;

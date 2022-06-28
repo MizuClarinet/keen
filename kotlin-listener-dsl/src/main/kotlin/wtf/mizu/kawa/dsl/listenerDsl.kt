@@ -1,9 +1,9 @@
-package wtf.mizu.keen.dsl
+package wtf.mizu.kawa.dsl
 
 import java.util.SortedSet
 
-import wtf.mizu.keen.api.Listener
-import wtf.mizu.keen.api.Subscription
+import wtf.mizu.kawa.api.Listener
+import wtf.mizu.kawa.api.Subscription
 
 /**
  * A Kotlin subclass of the original [Listener] class, used by DSL inline

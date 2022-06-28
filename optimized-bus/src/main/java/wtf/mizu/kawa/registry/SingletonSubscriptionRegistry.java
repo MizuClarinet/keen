@@ -1,15 +1,15 @@
-package wtf.mizu.keen.registry;
+package wtf.mizu.kawa.registry;
 
 import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import wtf.mizu.keen.api.Subscription;
+import wtf.mizu.kawa.api.Subscription;
 
 /**
  * TODO
  *
- * @param <T>
+ * @param <T> the topic.
  * @author Shyrogan
  * @author lambdagg
  * @since 0.0.1

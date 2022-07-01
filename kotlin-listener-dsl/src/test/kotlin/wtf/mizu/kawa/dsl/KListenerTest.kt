@@ -1,23 +1,25 @@
-package wtf.mizu.keen
+package wtf.mizu.kawa.dsl
 
 import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.Test
 
-class ListenerDSLTest {
+import wtf.mizu.kawa.OptimizedBus
+
+class KListenerTest {
+    private val bus = OptimizedBus()
 
     private var i = 0
-    private val bus = OptimizedBus()
+
     private val listener = listener {
-        on<Int> { i++ }
+        on { _ -> i++ }
     }
 
     @Test
     fun creationTest() {
-        bus.add(listener)
+        bus.addListener(listener)
         bus.publish(1)
-        bus.remove(listener)
+        bus.removeListener(listener)
         bus.publish(1)
         assumeTrue(i == 1)
     }
-
 }

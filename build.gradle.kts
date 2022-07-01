@@ -3,19 +3,17 @@ plugins {
     `maven-publish`
     signing
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
-    id("com.github.jmongard.git-semver-plugin") version "0.4.2"
 }
 
-group = "wtf.mizu.keen"
-version = semver.version
+allprojects {
+    group = "wtf.mizu.kawa"
+    version = "0.1.0"
+}
 
 subprojects {
     apply(plugin = "maven-publish")
     apply(plugin = "signing")
     apply(plugin = "java-library")
-
-    group = parent!!.group
-    version = parent!!.version
 
     repositories {
         mavenCentral()
@@ -27,6 +25,8 @@ subprojects {
     }
 
     dependencies {
+        compileOnly("org.jetbrains:annotations:23.0.0")
+
         testImplementation(platform("org.junit:junit-bom:5.8.2"))
         testImplementation("org.junit.jupiter:junit-jupiter")
     }

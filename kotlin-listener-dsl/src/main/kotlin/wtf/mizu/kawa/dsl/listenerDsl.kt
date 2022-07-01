@@ -14,7 +14,7 @@ import wtf.mizu.kawa.api.Subscription
  * @see Listener
  * @since 0.0.1
  */
-class KListener<T> : Listener<T> {
+open class KListener<T> : Listener<T> {
     private val subscriptions =
         mutableMapOf<Class<T>, SortedSet<Subscription<T>>>()
 

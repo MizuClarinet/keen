@@ -1,7 +1,6 @@
 package wtf.mizu.kawa.registry;
 
-import java.util.Collections;
-import java.util.SortedSet;
+import java.util.*;
 
 import wtf.mizu.kawa.api.Subscription;
 
@@ -14,10 +13,10 @@ import wtf.mizu.kawa.api.Subscription;
  * @since 0.0.1
  */
 public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T> {
-    private final SortedSet<Subscription<T>> subscriptions;
+    private final List<Subscription<T>> subscriptions;
 
     public OptimizedSubscriptionRegistry(
-            SortedSet<Subscription<T>> subscriptions
+            List<Subscription<T>> subscriptions
     ) {
         // TODO maybe we want to synchronize stuff here?
         this.subscriptions = subscriptions;
@@ -27,8 +26,8 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
      * {@inheritDoc}
      */
     @Override
-    public SortedSet<Subscription<T>> subscriptions() {
-        return Collections.unmodifiableSortedSet(subscriptions);
+    public List<Subscription<T>> subscriptions() {
+        return Collections.unmodifiableList(subscriptions);
     }
 
     /**
@@ -36,7 +35,11 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
      */
     @Override
     public SubscriptionRegistry<T> add(Subscription<T> subscription) {
-        subscriptions.add(subscription);
+        if (!subscriptions.contains(subscription)) {
+            subscriptions.add(subscription);
+            Collections.sort(subscriptions);
+        }
+
         return this;
     }
 
@@ -48,7 +51,7 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
         subscriptions.remove(subscription);
 
         if (subscriptions.size() == 1) {
-            return new SingletonSubscriptionRegistry<>(subscriptions.first());
+            return new SingletonSubscriptionRegistry<>(subscriptions.get(0));
         }
 
         return this;
@@ -59,9 +62,14 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
      */
     @Override
     public void publish(T event) {
-        // This *should* run faster than a for-loop as SortedSet doesn't
-        // implement `RandomAccess`.
-
-        subscriptions.forEach((subscription) -> subscription.consume(event));
+        if (subscriptions instanceof RandomAccess) {
+            for (int i = 0; i < subscriptions.size(); i++) {
+                subscriptions.get(i).consume(event);
+            }
+        } else {
+            for (var i = subscriptions.iterator(); i.hasNext(); ) {
+                i.next().consume(event);
+            }
+        }
     }
 }

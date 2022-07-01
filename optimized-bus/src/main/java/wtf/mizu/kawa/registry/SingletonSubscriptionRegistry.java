@@ -1,8 +1,6 @@
 package wtf.mizu.kawa.registry;
 
-import java.util.Collections;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import wtf.mizu.kawa.api.Subscription;
 
@@ -22,10 +20,10 @@ public class SingletonSubscriptionRegistry<T>
     private final Subscription<T> singleton;
 
     /**
-     * The fallback {@link SortedSet}, only initialized when calling
+     * The fallback {@link List}, only initialized when calling
      * {@link #subscriptions()}.
      */
-    private SortedSet<Subscription<T>> fallbackSet = null;
+    private List<Subscription<T>> fallbackSet = null;
 
     public SingletonSubscriptionRegistry(Subscription<T> singleton) {
         this.singleton = singleton;
@@ -35,11 +33,9 @@ public class SingletonSubscriptionRegistry<T>
      * {@inheritDoc}
      */
     @Override
-    public SortedSet<Subscription<T>> subscriptions() {
+    public List<Subscription<T>> subscriptions() {
         if (fallbackSet == null) {
-            fallbackSet = new TreeSet<>();
-            fallbackSet.add(singleton);
-            fallbackSet = Collections.unmodifiableSortedSet(fallbackSet);
+            fallbackSet = List.of(singleton);
         }
 
         return fallbackSet;
@@ -50,11 +46,11 @@ public class SingletonSubscriptionRegistry<T>
      */
     @Override
     public SubscriptionRegistry<T> add(Subscription<T> subscription) {
-        var set = new TreeSet<Subscription<T>>();
-        set.add(singleton);
-        set.add(subscription);
+        final var list = new ArrayList<Subscription<T>>();
+        list.add(singleton);
+        list.add(subscription);
 
-        return new OptimizedSubscriptionRegistry<>(set);
+        return new OptimizedSubscriptionRegistry<>(list);
     }
 
     /**

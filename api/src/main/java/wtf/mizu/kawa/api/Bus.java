@@ -48,7 +48,7 @@ public interface Bus {
      * @param subscriptions the {@link Subscription} collection.
      */
     default void addSubscriptions(
-            @NotNull SortedSet<? extends Subscription<?>> subscriptions
+            @NotNull List<? extends Subscription<?>> subscriptions
     ) {
         for (final var subscription : subscriptions) {
             this.addSubscription(subscription);
@@ -72,9 +72,8 @@ public interface Bus {
      * Registers the given {@link Listener} to this bus.
      *
      * @param listener the {@link Listener}.
-     * @param <T>          the main topic.
      */
-    default <T> void addListener(@NotNull Listener<T> listener) {
+    default void addListener(@NotNull Listener listener) {
         for (final var subscriptions : listener.subscriptions().values()) {
             this.addSubscriptions(subscriptions);
         }
@@ -84,9 +83,8 @@ public interface Bus {
      * Unregisters the given {@link Listener} from this bus.
      *
      * @param listener the {@link Listener}.
-     * @param <T>          the main topic.
      */
-    default <T> void removeListener(@NotNull Listener<T> listener) {
+    default void removeListener(@NotNull Listener listener) {
         for (final var subscriptions : listener.subscriptions().values()) {
             this.removeSubscriptions(subscriptions);
         }
@@ -98,7 +96,7 @@ public interface Bus {
      * @param listeners the {@link Listener} collection.
      */
     default void addListeners(
-            @NotNull Collection<? extends Listener<?>> listeners
+            @NotNull Collection<? extends Listener> listeners
     ) {
         for (final var listener : listeners) {
             this.addListener(listener);
@@ -111,7 +109,7 @@ public interface Bus {
      * @param listeners the {@link Listener} collection.
      */
     default void removeListeners(
-            @NotNull Collection<? extends Listener<?>> listeners
+            @NotNull Collection<? extends Listener> listeners
     ) {
         for (final var listener : listeners) {
             this.removeListener(listener);

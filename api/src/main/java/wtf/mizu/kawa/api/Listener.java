@@ -11,17 +11,16 @@ import java.util.*;
  * Once again, many ways of representing listeners are possible : classes,
  * instantiated by builders, ...
  *
- * @param <T> the main topic.
  * @author Shyrogan
  * @author lambdagg
  * @since 0.0.1
  */
-public interface Listener<T> {
+public interface Listener {
     /**
      * The subscription map getter.
      *
      * @return a {@link Map} that associates each topic type to its
-     * {@link Subscription} {@link SortedSet}.
+     * {@link Subscription} {@link List}.
      */
-    Map<Class<T>, SortedSet<Subscription<T>>> subscriptions();
+    Map<Class<?>, List<Subscription<?>>> subscriptions();
 }

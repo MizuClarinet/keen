@@ -10,8 +10,8 @@ import wtf.mizu.kawa.registry.SingletonSubscriptionRegistry;
 import wtf.mizu.kawa.registry.SubscriptionRegistry;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 /**
  * TODO
@@ -84,29 +84,22 @@ public class OptimizedBus implements Bus {
      * @param listener The {@link Listener}
      */
     @Override
-    public <T> void addListener(@NotNull Listener<T> listener) {
+    public void addListener(@NotNull Listener listener) {
         for (final var entry : listener.subscriptions().entrySet()) {
             final var topic = entry.getKey();
-            final var subscriptionSet = (SortedSet<Subscription<Object>>)
+            final var subscriptions = (List<Subscription<Object>>)
                     ((Object) entry.getValue());
 
             final var registry = topicToSubscriptionsMap.get(topic);
 
             if (registry == null) {
-                if (entry.getValue().size() == 1) {
-                    topicToSubscriptionsMap.put(
-                            topic,
-                            new SingletonSubscriptionRegistry<>(
-                                    subscriptionSet.first()
-                            )
-                    );
-
-                    return;
-                }
-
                 topicToSubscriptionsMap.put(
                         topic,
-                        new OptimizedSubscriptionRegistry<>(subscriptionSet)
+                        entry.getValue().size() == 1 ?
+                                new SingletonSubscriptionRegistry<>(
+                                        subscriptions.get(0)
+                                ) :
+                                new OptimizedSubscriptionRegistry<>(subscriptions)
                 );
 
                 return;
@@ -114,7 +107,7 @@ public class OptimizedBus implements Bus {
 
             topicToSubscriptionsMap.put(
                     topic,
-                    registry.addAll(subscriptionSet)
+                    registry.addAll(subscriptions)
             );
         }
     }

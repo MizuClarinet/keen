@@ -5,9 +5,8 @@ import wtf.mizu.kawa.api.Bus;
 import wtf.mizu.kawa.api.Listener;
 import wtf.mizu.kawa.api.Subscription;
 
+import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -17,11 +16,9 @@ public class OptimizedBusTest {
 
     @Test
     void invocationTest() {
-        SortedSet<Subscription<Integer>> set = new TreeSet<>();
-        set.add(increasingSubscription);
-        Listener<Integer> l = () -> Map.of(Integer.class, set);
+        Listener l = () -> Map.of(Integer.class, List.of(increasingSubscription));
         bus.addListener(l);
-        bus.publish(1);
+        bus.publish(0);
         assumeTrue(increasingSubscription.number == 1);
     }
 

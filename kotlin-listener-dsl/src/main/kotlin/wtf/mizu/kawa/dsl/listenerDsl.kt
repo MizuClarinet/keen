@@ -1,7 +1,5 @@
 package wtf.mizu.kawa.dsl
 
-import java.util.SortedSet
-
 import wtf.mizu.kawa.api.Listener
 import wtf.mizu.kawa.api.Subscription
 
@@ -14,9 +12,9 @@ import wtf.mizu.kawa.api.Subscription
  * @see Listener
  * @since 0.0.1
  */
-open class KListener<T> : Listener<T> {
+open class KListener : Listener {
     private val subscriptions =
-        mutableMapOf<Class<T>, SortedSet<Subscription<T>>>()
+        mutableMapOf<Class<*>, List<Subscription<*>>>()
 
     override fun subscriptions() = subscriptions
 }
@@ -24,13 +22,12 @@ open class KListener<T> : Listener<T> {
 /**
  * Creates an inlined listener defined by the given block.
  *
- * @param T the main topic.
  * @property block the block to apply to the [KListener].
  *
  * @return the newly created [KListener].
  */
-inline fun <T> listener(crossinline block: KListener<T>.() -> Unit) =
-    KListener<T>().apply(block)
+inline fun listener(crossinline block: KListener.() -> Unit) =
+    KListener().apply(block)
 
 /**
  * Creates an inlined event subscription defined by the given block.
@@ -41,7 +38,7 @@ inline fun <T> listener(crossinline block: KListener<T>.() -> Unit) =
  *
  * @return the newly created subscription.
  */
-inline fun <reified T : Any> Listener<T>.on(
+inline fun <reified T : Any> Listener.on(
     priority: Int = 0,
     crossinline block: (T) -> Unit,
 ) = object : Subscription<T> {
@@ -52,6 +49,6 @@ inline fun <reified T : Any> Listener<T>.on(
     override fun consume(event: T) = block(event)
 }.also { subscription ->
     subscriptions()
-        .getOrPut(subscription.topic()) { sortedSetOf() }
+        .getOrPut(subscription.topic()) { mutableListOf() }
         .add(subscription)
 }

@@ -1,7 +1,7 @@
 package wtf.mizu.kawa.registry;
 
 import java.util.Collections;
-import java.util.SortedSet;
+import java.util.List;
 
 import wtf.mizu.kawa.api.Subscription;
 
@@ -18,8 +18,8 @@ public class EmptySubscriptionRegistry<T> implements SubscriptionRegistry<T> {
      * {@inheritDoc}
      */
     @Override
-    public SortedSet<Subscription<T>> subscriptions() {
-        return Collections.emptySortedSet();
+    public List<Subscription<T>> subscriptions() {
+        return Collections.emptyList();
     }
 
     /**

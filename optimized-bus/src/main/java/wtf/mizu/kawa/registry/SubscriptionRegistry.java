@@ -16,12 +16,12 @@ public interface SubscriptionRegistry<T> {
     /**
      * The subscription set getter.
      *
-     * @return an immutable {@link SortedSet} that returns all of the
+     * @return an immutable {@link List} that returns all of the
      * {@link Subscription}s in this {@link SubscriptionRegistry}.
      * Needs to be synchronized if multiple threads access the same
-     * registry (Collections.synchronizedSortedSet(...)).
+     * registry (Collections.synchronizedList(...)).
      */
-    SortedSet<Subscription<T>> subscriptions();
+    List<Subscription<T>> subscriptions();
 
     /**
      * Adds the given {@link Subscription} to this {@link SubscriptionRegistry}.
@@ -48,7 +48,7 @@ public interface SubscriptionRegistry<T> {
      * @return the new subscription registry.
      */
     default SubscriptionRegistry<T> addAll(
-            Set<? extends Subscription<T>> subscriptions
+            Collection<? extends Subscription<T>> subscriptions
     ) {
         final var newSize = subscriptions().size() + subscriptions.size();
 
@@ -59,14 +59,14 @@ public interface SubscriptionRegistry<T> {
         if (newSize == 1) {
             return new SingletonSubscriptionRegistry<>(
                     subscriptions.isEmpty() ?
-                            subscriptions().first() :
+                            subscriptions().get(0) :
                             subscriptions.iterator().next()
             );
         }
 
-        final var set = new TreeSet<>(subscriptions());
-        set.addAll(subscriptions);
-        return new OptimizedSubscriptionRegistry<>(set);
+        final var list = new ArrayList<>(subscriptions());
+        list.addAll(subscriptions);
+        return new OptimizedSubscriptionRegistry<>(list);
     }
 
     /**
@@ -77,20 +77,20 @@ public interface SubscriptionRegistry<T> {
      * @return the new subscription registry.
      */
     default SubscriptionRegistry<T> removeAll(
-            Set<? extends Subscription<T>> subscriptions
+            Collection<? extends Subscription<T>> subscriptions
     ) {
-        final var set = new TreeSet<>(subscriptions());
-        set.removeAll(subscriptions);
+        final var list = new ArrayList<>(subscriptions());
+        list.removeAll(subscriptions);
 
-        if (set.size() == 0) {
+        if (list.size() == 0) {
             return new EmptySubscriptionRegistry<>();
         }
 
-        if (set.size() == 1) {
-            return new SingletonSubscriptionRegistry<>(set.first());
+        if (list.size() == 1) {
+            return new SingletonSubscriptionRegistry<>(list.get(0));
         }
 
-        return new OptimizedSubscriptionRegistry<>(set);
+        return new OptimizedSubscriptionRegistry<>(list);
     }
 
     /**

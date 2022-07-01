@@ -11,7 +11,7 @@ class KListenerTest {
     private var i = 0
 
     private val listener = listener {
-        on { _ -> i++ }
+        on<String> { _ -> i++ }
     }
 
     @Test

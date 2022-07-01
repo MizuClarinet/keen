@@ -12,7 +12,3 @@ object Dependencies {
 
     val kotlinModules = arrayOf<String>("stdlib")
 }
-
-object Repositories {
-    val mavenUrls = arrayOf<String>()
-}

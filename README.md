@@ -14,11 +14,11 @@ repositories {
 }
 
 dependencies {
-    implementation("wtf.mizu.kawa:api:0.1.0")
-    implementation("wtf.mizu.kawa:optimized-bus:0.1.0")
+    implementation("wtf.mizu.kawa:api:0.2.0")
+    implementation("wtf.mizu.kawa:optimized-bus:0.2.0")
 
     // If you're using Kotlin:
-    implementation("wtf.mizu.kawa:kotlin-listener-dsl:0.1.0")
+    implementation("wtf.mizu.kawa:kotlin-listener-dsl:0.2.0")
 }
 ```
 

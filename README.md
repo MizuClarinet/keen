@@ -38,7 +38,7 @@ dependencies {
         <version>0.1.0</version>
     </dependency>
 
-    <!-- If you're using Kotlin -->
+    <!-- If you're using Kotlin: -->
     <dependency>
         <groupId>wtf.mizu.kawa</groupId>
         <artifactId>kotlin-listener-dsl</artifactId>

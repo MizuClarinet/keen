@@ -4,7 +4,6 @@ private const val kotlinVersion = "1.7.0"
 
 object Plugins {
     const val KOTLIN = kotlinVersion
-    const val SEMVER = "0.4.2"
     const val NEXUS_PUBLISH = "1.0.0"
 }
 

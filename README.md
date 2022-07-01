@@ -4,7 +4,7 @@ Open-source, powerful and modular [Kotlin][kotlin]-enhanced event bus for the [J
 
 ## Importing
 
-You can import [kawa][project-url] from [Maven Central][mvnc] by adding it to your dependencies block.
+You can import [Kawa][project-url] from [Maven Central][mvnc] by adding it to your dependencies block.
 
 ### Gradle
 
@@ -14,11 +14,11 @@ repositories {
 }
 
 dependencies {
-    implementation("wtf.mizu.kawa:api:{LATEST_VERSION}")
-    implementation("wtf.mizu.kawa:optimized-bus:{LATEST_VERSION}")
+    implementation("wtf.mizu.kawa:api:0.1.0")
+    implementation("wtf.mizu.kawa:optimized-bus:0.1.0")
 
     // If you're using Kotlin:
-    implementation("wtf.mizu.kawa:kotlin-listener-dsl:{LATEST_VERSION}")
+    implementation("wtf.mizu.kawa:kotlin-listener-dsl:0.1.0")
 }
 ```
 
@@ -29,20 +29,20 @@ dependencies {
     <dependency>
         <groupId>wtf.mizu.kawa</groupId>
         <artifactId>api</artifactId>
-        <version>{LATEST_VERSION}</version>
+        <version>0.1.0</version>
     </dependency>
 
     <dependency>
         <groupId>wtf.mizu.kawa</groupId>
         <artifactId>optimized-bus</artifactId>
-        <version>{LATEST_VERSION}</version>
+        <version>0.1.0</version>
     </dependency>
 
     <!-- If you're using Kotlin -->
     <dependency>
         <groupId>wtf.mizu.kawa</groupId>
         <artifactId>kotlin-listener-dsl</artifactId>
-        <version>{LATEST_VERSION}</version>
+        <version>0.1.0</version>
     </dependency>
 </dependencies>
 ```

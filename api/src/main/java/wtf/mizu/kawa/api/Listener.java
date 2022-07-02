@@ -17,7 +17,7 @@ import java.util.*;
  * @author lambdagg
  * @since 0.0.1
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unused"})
 public interface Listener {
     /**
      * The subscription map getter.

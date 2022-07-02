@@ -13,6 +13,7 @@ import java.util.*;
  * @author lambdagg
  * @since 0.0.1
  */
+@SuppressWarnings("unused")
 public interface SubscriptionRegistry<T> {
     /**
      * The subscription set getter.

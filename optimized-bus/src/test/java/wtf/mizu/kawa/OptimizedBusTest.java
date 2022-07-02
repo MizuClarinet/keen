@@ -11,6 +11,12 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+/**
+ * Tests the {@link OptimizedBus} class.
+ *
+ * @author Shyrogan
+ * @since 0.0.1
+ */
 public class OptimizedBusTest {
     final Bus bus = new OptimizedBus();
     final IncreasingSubscription increasingSubscription = new IncreasingSubscription();

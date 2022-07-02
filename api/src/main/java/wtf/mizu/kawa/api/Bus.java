@@ -16,6 +16,7 @@ import java.util.*;
  * @see <a href="https://github.com/MizuSoftware/kawa/blob/main/optimized-bus/src/main/java/wtf/mizu/kawa/impl/optimized/OptimizedBus.java">example implementation</a>
  * @since 0.0.1
  */
+@SuppressWarnings("unused")
 public interface Bus {
     /**
      * Publishes the given event instance to its registered

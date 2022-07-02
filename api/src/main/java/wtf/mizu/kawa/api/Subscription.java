@@ -1,5 +1,7 @@
 package wtf.mizu.kawa.api;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Consumes event instances.
  * <p>
@@ -22,7 +24,7 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
      *
      * @return the main topic.
      */
-    Class<T> topic();
+    @NotNull Class<T> topic();
 
     /**
      * The priority getter.
@@ -41,7 +43,7 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
      *
      * @param event the event to be consumed.
      */
-    default void consume(T event) {
+    default void consume(@NotNull T event) {
     }
 
     /**
@@ -51,7 +53,7 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
      * @return an integer, as defined by {@link Comparable#compareTo(Object)}.
      */
     @Override
-    default int compareTo(Subscription<T> subscription) {
+    default int compareTo(@NotNull Subscription<T> subscription) {
         return this.priority() - subscription.priority();
     }
 }

@@ -1,5 +1,6 @@
 package wtf.mizu.kawa.registry;
 
+import org.jetbrains.annotations.NotNull;
 import wtf.mizu.kawa.api.Subscription;
 
 import java.util.*;
@@ -21,7 +22,7 @@ public interface SubscriptionRegistry<T> {
      * Needs to be synchronized if multiple threads access the same
      * registry (Collections.synchronizedList(...)).
      */
-    List<Subscription<T>> subscriptions();
+    @NotNull List<Subscription<T>> subscriptions();
 
     /**
      * Adds the given {@link Subscription} to this {@link SubscriptionRegistry}.
@@ -29,7 +30,7 @@ public interface SubscriptionRegistry<T> {
      * @param subscription the subscription.
      * @return the new subscription registry.
      */
-    SubscriptionRegistry<T> add(Subscription<T> subscription);
+    @NotNull SubscriptionRegistry<T> add(@NotNull Subscription<T> subscription);
 
     /**
      * Removes the given {@link Subscription} from this
@@ -38,7 +39,7 @@ public interface SubscriptionRegistry<T> {
      * @param subscription the subscription.
      * @return the new subscription registry.
      */
-    SubscriptionRegistry<T> remove(Subscription<T> subscription);
+    @NotNull SubscriptionRegistry<T> remove(@NotNull Subscription<T> subscription);
 
     /**
      * Adds the given {@link Subscription} collection to this
@@ -47,8 +48,8 @@ public interface SubscriptionRegistry<T> {
      * @param subscriptions the subscription collection.
      * @return the new subscription registry.
      */
-    default SubscriptionRegistry<T> addAll(
-            Collection<? extends Subscription<T>> subscriptions
+    default @NotNull SubscriptionRegistry<T> addAll(
+            @NotNull Collection<? extends Subscription<T>> subscriptions
     ) {
         final var newSize = subscriptions().size() + subscriptions.size();
 
@@ -76,8 +77,8 @@ public interface SubscriptionRegistry<T> {
      * @param subscriptions the subscription.
      * @return the new subscription registry.
      */
-    default SubscriptionRegistry<T> removeAll(
-            Collection<? extends Subscription<T>> subscriptions
+    default @NotNull SubscriptionRegistry<T> removeAll(
+            @NotNull Collection<? extends Subscription<T>> subscriptions
     ) {
         final var list = new ArrayList<>(subscriptions());
         list.removeAll(subscriptions);
@@ -98,5 +99,5 @@ public interface SubscriptionRegistry<T> {
      *
      * @param event the event to be published.
      */
-    void publish(T event);
+    void publish(@NotNull T event);
 }

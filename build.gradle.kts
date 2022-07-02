@@ -26,6 +26,7 @@ subprojects {
 
     dependencies {
         compileOnly("org.jetbrains:annotations:23.0.0")
+        testCompileOnly("org.jetbrains:annotations:23.0.0")
 
         testImplementation(platform("org.junit:junit-bom:5.8.2"))
         testImplementation("org.junit.jupiter:junit-jupiter")

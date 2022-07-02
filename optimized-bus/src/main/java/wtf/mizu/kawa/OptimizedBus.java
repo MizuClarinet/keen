@@ -25,9 +25,6 @@ public class OptimizedBus implements Bus {
     private final Map<Class<?>, SubscriptionRegistry<Object>> topicToSubscriptionsMap =
             new HashMap<>();
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public <T> void publish(@NotNull T event) {
         final var registry = topicToSubscriptionsMap.get(event.getClass());
@@ -35,9 +32,6 @@ public class OptimizedBus implements Bus {
             registry.publish(event);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> void addSubscription(@NotNull Subscription<T> subscription) {
@@ -56,9 +50,6 @@ public class OptimizedBus implements Bus {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> void removeSubscription(@NotNull Subscription<T> subscription) {

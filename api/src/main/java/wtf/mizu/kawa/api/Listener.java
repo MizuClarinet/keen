@@ -24,7 +24,7 @@ public interface Listener {
      * @return a {@link Map} that associates each topic type to its
      * {@link Subscription} {@link List}.
      */
-    Map<Class<?>, List<Subscription<?>>> subscriptions();
+    @NotNull Map<Class<?>, List<Subscription<?>>> subscriptions();
 
     /**
      * Gets a subscription list for the given class.

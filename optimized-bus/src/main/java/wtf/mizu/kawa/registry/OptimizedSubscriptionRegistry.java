@@ -2,6 +2,7 @@ package wtf.mizu.kawa.registry;
 
 import java.util.*;
 
+import org.jetbrains.annotations.NotNull;
 import wtf.mizu.kawa.api.Subscription;
 
 /**
@@ -22,19 +23,13 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
         this.subscriptions = subscriptions;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<Subscription<T>> subscriptions() {
+    public @NotNull List<Subscription<T>> subscriptions() {
         return Collections.unmodifiableList(subscriptions);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public SubscriptionRegistry<T> add(Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> add(@NotNull Subscription<T> subscription) {
         if (!subscriptions.contains(subscription)) {
             subscriptions.add(subscription);
             Collections.sort(subscriptions);
@@ -43,11 +38,8 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public SubscriptionRegistry<T> remove(Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> remove(@NotNull Subscription<T> subscription) {
         subscriptions.remove(subscription);
 
         if (subscriptions.size() == 1) {
@@ -57,11 +49,8 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void publish(T event) {
+    public void publish(@NotNull T event) {
         if (subscriptions instanceof RandomAccess) {
             for (int i = 0; i < subscriptions.size(); i++) {
                 subscriptions.get(i).consume(event);

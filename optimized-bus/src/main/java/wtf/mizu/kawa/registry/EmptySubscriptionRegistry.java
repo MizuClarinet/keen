@@ -3,6 +3,7 @@ package wtf.mizu.kawa.registry;
 import java.util.Collections;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import wtf.mizu.kawa.api.Subscription;
 
 /**
@@ -14,35 +15,23 @@ import wtf.mizu.kawa.api.Subscription;
  * @since 0.0.1
  */
 public class EmptySubscriptionRegistry<T> implements SubscriptionRegistry<T> {
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<Subscription<T>> subscriptions() {
+    public @NotNull List<Subscription<T>> subscriptions() {
         return Collections.emptyList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public SubscriptionRegistry<T> add(Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> add(@NotNull Subscription<T> subscription) {
         return new SingletonSubscriptionRegistry<>(subscription);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public SubscriptionRegistry<T> remove(Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> remove(@NotNull Subscription<T> subscription) {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void publish(T event) {
+    public void publish(@NotNull T event) {
         // No operations need to be done as this registry is *meant* to be
         // empty.
     }

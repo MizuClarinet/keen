@@ -2,6 +2,7 @@ package wtf.mizu.kawa.registry;
 
 import java.util.*;
 
+import org.jetbrains.annotations.NotNull;
 import wtf.mizu.kawa.api.Subscription;
 
 /**
@@ -29,11 +30,8 @@ public class SingletonSubscriptionRegistry<T>
         this.singleton = singleton;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<Subscription<T>> subscriptions() {
+    public @NotNull List<Subscription<T>> subscriptions() {
         if (fallbackSet == null) {
             fallbackSet = List.of(singleton);
         }
@@ -41,11 +39,8 @@ public class SingletonSubscriptionRegistry<T>
         return fallbackSet;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public SubscriptionRegistry<T> add(Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> add(@NotNull Subscription<T> subscription) {
         final var list = new ArrayList<Subscription<T>>();
         list.add(singleton);
         list.add(subscription);
@@ -53,11 +48,8 @@ public class SingletonSubscriptionRegistry<T>
         return new OptimizedSubscriptionRegistry<>(list);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public SubscriptionRegistry<T> remove(Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> remove(@NotNull Subscription<T> subscription) {
         if (singleton.equals(subscription)) {
             return new EmptySubscriptionRegistry<>();
         }
@@ -65,11 +57,8 @@ public class SingletonSubscriptionRegistry<T>
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void publish(T event) {
+    public void publish(@NotNull T event) {
         singleton.consume(event);
     }
 }

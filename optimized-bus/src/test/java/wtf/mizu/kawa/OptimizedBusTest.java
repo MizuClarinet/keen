@@ -1,5 +1,6 @@
 package wtf.mizu.kawa;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import wtf.mizu.kawa.api.Bus;
 import wtf.mizu.kawa.api.Listener;
@@ -26,7 +27,7 @@ public class OptimizedBusTest {
         int number;
 
         @Override
-        public Class<Integer> topic() {
+        public @NotNull Class<Integer> topic() {
             return Integer.class;
         }
 
@@ -36,7 +37,7 @@ public class OptimizedBusTest {
         }
 
         @Override
-        public void consume(Integer event) {
+        public void consume(@NotNull Integer event) {
             number++;
         }
     }

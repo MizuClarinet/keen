@@ -48,7 +48,7 @@ public interface Bus {
      * @param subscriptions the {@link Subscription} collection.
      */
     default void addSubscriptions(
-            @NotNull List<? extends Subscription<?>> subscriptions
+            @NotNull Collection<? extends Subscription<?>> subscriptions
     ) {
         for (final var subscription : subscriptions) {
             this.addSubscription(subscription);

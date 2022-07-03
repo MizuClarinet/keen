@@ -14,10 +14,10 @@ import wtf.mizu.kawa.api.Subscription;
  * @since 0.0.1
  */
 public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T> {
-    private final List<Subscription<T>> subscriptions;
+    private final @NotNull List<Subscription<T>> subscriptions;
 
     public OptimizedSubscriptionRegistry(
-            List<Subscription<T>> subscriptions
+            final @NotNull List<Subscription<T>> subscriptions
     ) {
         // TODO maybe we want to synchronize stuff here?
         this.subscriptions = subscriptions;
@@ -29,7 +29,7 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
     }
 
     @Override
-    public @NotNull SubscriptionRegistry<T> add(@NotNull Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> add(final @NotNull Subscription<T> subscription) {
         if (!subscriptions.contains(subscription)) {
             subscriptions.add(subscription);
             Collections.sort(subscriptions);
@@ -39,7 +39,7 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
     }
 
     @Override
-    public @NotNull SubscriptionRegistry<T> remove(@NotNull Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> remove(final @NotNull Subscription<T> subscription) {
         subscriptions.remove(subscription);
 
         if (subscriptions.size() == 1) {
@@ -50,13 +50,13 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
     }
 
     @Override
-    public void publish(@NotNull T event) {
+    public void publish(final @NotNull T event) {
         if (subscriptions instanceof RandomAccess) {
             for (int i = 0; i < subscriptions.size(); i++) {
                 subscriptions.get(i).consume(event);
             }
         } else {
-            for (var i = subscriptions.iterator(); i.hasNext(); ) {
+            for (final Iterator<Subscription<T>> i = subscriptions.iterator(); i.hasNext(); ) {
                 i.next().consume(event);
             }
         }

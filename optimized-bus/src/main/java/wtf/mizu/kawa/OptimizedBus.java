@@ -26,17 +26,25 @@ public class OptimizedBus implements Bus {
             new HashMap<>();
 
     @Override
-    public <T> void publish(@NotNull T event) {
-        final var registry = topicToSubscriptionsMap.get(event.getClass());
-        if (registry != null)
+    public <T> void publish(
+            final @NotNull T event
+    ) {
+        final SubscriptionRegistry<Object> registry =
+                topicToSubscriptionsMap.get(event.getClass());
+
+        if (registry != null) {
             registry.publish(event);
+        }
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void addSubscription(@NotNull Subscription<T> subscription) {
-        final var topic = subscription.topic();
-        final var registry = topicToSubscriptionsMap.get(topic);
+    public <T> void addSubscription(
+            final @NotNull Subscription<T> subscription
+    ) {
+        final Class<T> topic = subscription.topic();
+        final SubscriptionRegistry<Object> registry =
+                topicToSubscriptionsMap.get(topic);
 
         // TODO maybe we can use compute functions there?
 
@@ -52,20 +60,22 @@ public class OptimizedBus implements Bus {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void removeSubscription(@NotNull Subscription<T> subscription) {
-        final var topic = subscription.topic();
-        final var registry = topicToSubscriptionsMap.get(topic);
+    public <T> void removeSubscription(
+            final @NotNull Subscription<T> subscription
+    ) {
+        final Class<T> topic = subscription.topic();
+        final SubscriptionRegistry<Object> registry =
+                topicToSubscriptionsMap.get(topic);
 
         if (registry != null) {
-            final var removedRegistry = registry.remove(
-                    (Subscription<Object>) subscription
-            );
+            final SubscriptionRegistry<Object> newRegistry =
+                    registry.remove((Subscription<Object>) subscription);
 
-            if (removedRegistry instanceof EmptySubscriptionRegistry<?>) {
+            if (newRegistry instanceof EmptySubscriptionRegistry<?>) {
                 topicToSubscriptionsMap.remove(topic);
             }
 
-            topicToSubscriptionsMap.put(topic, removedRegistry);
+            topicToSubscriptionsMap.put(topic, newRegistry);
         }
     }
 
@@ -75,13 +85,17 @@ public class OptimizedBus implements Bus {
      * @param listener The {@link Listener}
      */
     @Override
-    public void addListener(@NotNull Listener listener) {
-        for (final var entry : listener.subscriptions().entrySet()) {
-            final var topic = entry.getKey();
-            final var subscriptions = (List<Subscription<Object>>)
-                    ((Object) entry.getValue());
+    public void addListener(
+            final @NotNull Listener listener
+    ) {
+        for (final Map.Entry<Class<?>, List<Subscription<?>>> entry :
+                listener.subscriptions().entrySet()) {
+            final Class<?> topic = entry.getKey();
+            final List<Subscription<Object>> subscriptions =
+                    (List<Subscription<Object>>) (Object) entry.getValue();
 
-            final var registry = topicToSubscriptionsMap.get(topic);
+            final SubscriptionRegistry<Object> registry =
+                    topicToSubscriptionsMap.get(topic);
 
             if (registry == null) {
                 topicToSubscriptionsMap.put(

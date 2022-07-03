@@ -6,10 +6,9 @@ import wtf.mizu.kawa.api.Bus;
 import wtf.mizu.kawa.api.Listener;
 import wtf.mizu.kawa.api.Subscription;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Collections;
 
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests the {@link OptimizedBus} class.
@@ -18,15 +17,23 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  * @since 0.0.1
  */
 public class OptimizedBusTest {
+    static final int EXPECTED_NUMBER = 42;
+
     final Bus bus = new OptimizedBus();
     final IncreasingSubscription increasingSubscription = new IncreasingSubscription();
 
     @Test
     void invocationTest() {
-        Listener l = () -> Map.of(Integer.class, List.of(increasingSubscription));
+        final Listener l = () -> Collections.singletonMap(
+                Integer.class,
+                Collections.singletonList(increasingSubscription)
+        );
+
         bus.addListener(l);
-        bus.publish(0);
-        assumeTrue(increasingSubscription.number == 1);
+        bus.publish(EXPECTED_NUMBER);
+        bus.publish(EXPECTED_NUMBER);
+
+        assertEquals(EXPECTED_NUMBER * 2, increasingSubscription.number);
     }
 
     static class IncreasingSubscription implements Subscription<Integer> {
@@ -43,8 +50,8 @@ public class OptimizedBusTest {
         }
 
         @Override
-        public void consume(@NotNull Integer event) {
-            number++;
+        public void consume(final @NotNull Integer event) {
+            number += event;
         }
     }
 }

@@ -1,6 +1,6 @@
 package wtf.mizu.kawa.dsl
 
-import org.junit.jupiter.api.Assumptions.assumeTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 import wtf.mizu.kawa.OptimizedBus
@@ -26,6 +26,6 @@ class KListenerTest {
         bus.publish(1)
         bus.removeListener(listener)
         bus.publish(1)
-        assumeTrue(i == 1)
+        assertEquals(1, i)
     }
 }

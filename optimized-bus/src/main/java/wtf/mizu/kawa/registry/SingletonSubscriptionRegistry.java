@@ -18,30 +18,30 @@ public class SingletonSubscriptionRegistry<T>
     /**
      * The singleton {@link Subscription} this registry is using.
      */
-    private final Subscription<T> singleton;
+    private final @NotNull Subscription<T> singleton;
 
     /**
-     * The fallback {@link List}, only initialized when calling
+     * The fallback singleton {@link List}, only initialized when calling
      * {@link #subscriptions()}.
      */
-    private List<Subscription<T>> fallbackSet = null;
+    private List<Subscription<T>> fallbackList = null;
 
-    public SingletonSubscriptionRegistry(Subscription<T> singleton) {
+    public SingletonSubscriptionRegistry(final @NotNull Subscription<T> singleton) {
         this.singleton = singleton;
     }
 
     @Override
     public @NotNull List<Subscription<T>> subscriptions() {
-        if (fallbackSet == null) {
-            fallbackSet = List.of(singleton);
-        }
-
-        return fallbackSet;
+        return fallbackList == null ?
+                fallbackList = Collections.singletonList(singleton) :
+                fallbackList;
     }
 
     @Override
-    public @NotNull SubscriptionRegistry<T> add(@NotNull Subscription<T> subscription) {
-        final var list = new ArrayList<Subscription<T>>();
+    public @NotNull SubscriptionRegistry<T> add(
+            final @NotNull Subscription<T> subscription
+    ) {
+        final List<Subscription<T>> list = new ArrayList<>();
         list.add(singleton);
         list.add(subscription);
 
@@ -49,7 +49,9 @@ public class SingletonSubscriptionRegistry<T>
     }
 
     @Override
-    public @NotNull SubscriptionRegistry<T> remove(@NotNull Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> remove(
+            final @NotNull Subscription<T> subscription
+    ) {
         if (singleton.equals(subscription)) {
             return new EmptySubscriptionRegistry<>();
         }
@@ -58,7 +60,7 @@ public class SingletonSubscriptionRegistry<T>
     }
 
     @Override
-    public void publish(@NotNull T event) {
+    public void publish(final @NotNull T event) {
         singleton.consume(event);
     }
 }

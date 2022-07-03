@@ -35,9 +35,9 @@ public interface Listener {
      * @return the subscription list for Ts, or `null` if none found.
      */
     default <T> List<Subscription<? extends T>> subscriptions(
-            @NotNull Class<T> tClass
+            final @NotNull Class<T> tClass
     ) {
-        var value = subscriptions().get(tClass);
+        final List<Subscription<?>> value = subscriptions().get(tClass);
 
         return value == null ?
                 null :
@@ -51,10 +51,11 @@ public interface Listener {
      * @param dummy hacky way to remove the need of giving a class. No argument
      *              is really needed.
      * @return the subscription list for Ts, or `null` if none found.
-     *
      * @see #subscriptions(Class)
      */
-    default <T> List<Subscription<? extends T>> subscriptions(T... dummy) {
+    default <T> List<Subscription<? extends T>> subscriptions(
+            final T... dummy
+    ) {
         return subscriptions(
                 (Class<T>) dummy.getClass().getComponentType()
         );

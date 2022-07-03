@@ -43,7 +43,7 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
      *
      * @param event the event to be consumed.
      */
-    default void consume(@NotNull T event) {
+    default void consume(final @NotNull T event) {
     }
 
     /**
@@ -53,7 +53,7 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
      * @return an integer, as defined by {@link Comparable#compareTo(Object)}.
      */
     @Override
-    default int compareTo(@NotNull Subscription<T> subscription) {
+    default int compareTo(final @NotNull Subscription<T> subscription) {
         return this.priority() - subscription.priority();
     }
 }

@@ -21,17 +21,17 @@ public class EmptySubscriptionRegistry<T> implements SubscriptionRegistry<T> {
     }
 
     @Override
-    public @NotNull SubscriptionRegistry<T> add(@NotNull Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> add(final @NotNull Subscription<T> subscription) {
         return new SingletonSubscriptionRegistry<>(subscription);
     }
 
     @Override
-    public @NotNull SubscriptionRegistry<T> remove(@NotNull Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> remove(final @NotNull Subscription<T> subscription) {
         return this;
     }
 
     @Override
-    public void publish(@NotNull T event) {
+    public void publish(final @NotNull T event) {
         // No operations need to be done as this registry is *meant* to be
         // empty.
     }

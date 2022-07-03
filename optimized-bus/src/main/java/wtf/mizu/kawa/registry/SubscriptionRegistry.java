@@ -31,7 +31,9 @@ public interface SubscriptionRegistry<T> {
      * @param subscription the subscription.
      * @return the new subscription registry.
      */
-    @NotNull SubscriptionRegistry<T> add(@NotNull Subscription<T> subscription);
+    @NotNull SubscriptionRegistry<T> add(
+            final @NotNull Subscription<T> subscription
+    );
 
     /**
      * Removes the given {@link Subscription} from this
@@ -40,7 +42,9 @@ public interface SubscriptionRegistry<T> {
      * @param subscription the subscription.
      * @return the new subscription registry.
      */
-    @NotNull SubscriptionRegistry<T> remove(@NotNull Subscription<T> subscription);
+    @NotNull SubscriptionRegistry<T> remove(
+            final @NotNull Subscription<T> subscription
+    );
 
     /**
      * Adds the given {@link Subscription} collection to this
@@ -50,9 +54,9 @@ public interface SubscriptionRegistry<T> {
      * @return the new subscription registry.
      */
     default @NotNull SubscriptionRegistry<T> addAll(
-            @NotNull Collection<? extends Subscription<T>> subscriptions
+            final @NotNull Collection<? extends Subscription<T>> subscriptions
     ) {
-        final var newSize = subscriptions().size() + subscriptions.size();
+        final int newSize = subscriptions().size() + subscriptions.size();
 
         if (newSize == 0) {
             return new EmptySubscriptionRegistry<>();
@@ -66,7 +70,7 @@ public interface SubscriptionRegistry<T> {
             );
         }
 
-        final var list = new ArrayList<>(subscriptions());
+        final List<Subscription<T>> list = new ArrayList<>(subscriptions());
         list.addAll(subscriptions);
         return new OptimizedSubscriptionRegistry<>(list);
     }
@@ -79,9 +83,9 @@ public interface SubscriptionRegistry<T> {
      * @return the new subscription registry.
      */
     default @NotNull SubscriptionRegistry<T> removeAll(
-            @NotNull Collection<? extends Subscription<T>> subscriptions
+            final @NotNull Collection<? extends Subscription<T>> subscriptions
     ) {
-        final var list = new ArrayList<>(subscriptions());
+        final List<Subscription<T>> list = new ArrayList<>(subscriptions());
         list.removeAll(subscriptions);
 
         if (list.size() == 0) {
@@ -100,5 +104,5 @@ public interface SubscriptionRegistry<T> {
      *
      * @param event the event to be published.
      */
-    void publish(@NotNull T event);
+    void publish(final @NotNull T event);
 }

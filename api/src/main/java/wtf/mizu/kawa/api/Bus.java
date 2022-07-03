@@ -25,7 +25,7 @@ public interface Bus {
      * @param event the event.
      * @param <T>   the event type.
      */
-    <T> void publish(@NotNull T event);
+    <T> void publish(final @NotNull T event);
 
     /**
      * Registers the given {@link Subscription} to this bus.
@@ -33,7 +33,7 @@ public interface Bus {
      * @param subscription the {@link Subscription}.
      * @param <T>          the main topic.
      */
-    <T> void addSubscription(@NotNull Subscription<T> subscription);
+    <T> void addSubscription(final @NotNull Subscription<T> subscription);
 
     /**
      * Unregisters the given {@link Subscription} from this bus.
@@ -41,7 +41,7 @@ public interface Bus {
      * @param subscription the {@link Subscription}.
      * @param <T>          the main topic.
      */
-    <T> void removeSubscription(@NotNull Subscription<T> subscription);
+    <T> void removeSubscription(final @NotNull Subscription<T> subscription);
 
     /**
      * Registers the given {@link Subscription} collection to this bus.
@@ -49,9 +49,9 @@ public interface Bus {
      * @param subscriptions the {@link Subscription} collection.
      */
     default void addSubscriptions(
-            @NotNull Collection<? extends Subscription<?>> subscriptions
+            final @NotNull Collection<? extends Subscription<?>> subscriptions
     ) {
-        for (final var subscription : subscriptions) {
+        for (final Subscription<?> subscription : subscriptions) {
             this.addSubscription(subscription);
         }
     }
@@ -62,9 +62,9 @@ public interface Bus {
      * @param subscriptions the {@link Subscription} collection.
      */
     default void removeSubscriptions(
-            @NotNull Collection<? extends Subscription<?>> subscriptions
+            final @NotNull Collection<? extends Subscription<?>> subscriptions
     ) {
-        for (final var subscription : subscriptions) {
+        for (final Subscription<?> subscription : subscriptions) {
             this.removeSubscription(subscription);
         }
     }
@@ -74,8 +74,11 @@ public interface Bus {
      *
      * @param listener the {@link Listener}.
      */
-    default void addListener(@NotNull Listener listener) {
-        for (final var subscriptions : listener.subscriptions().values()) {
+    default void addListener(final @NotNull Listener listener) {
+        for (
+                final Collection<Subscription<?>> subscriptions :
+                listener.subscriptions().values()
+        ) {
             this.addSubscriptions(subscriptions);
         }
     }
@@ -85,8 +88,11 @@ public interface Bus {
      *
      * @param listener the {@link Listener}.
      */
-    default void removeListener(@NotNull Listener listener) {
-        for (final var subscriptions : listener.subscriptions().values()) {
+    default void removeListener(final @NotNull Listener listener) {
+        for (
+                final Collection<Subscription<?>> subscriptions :
+                listener.subscriptions().values()
+        ) {
             this.removeSubscriptions(subscriptions);
         }
     }
@@ -97,9 +103,9 @@ public interface Bus {
      * @param listeners the {@link Listener} collection.
      */
     default void addListeners(
-            @NotNull Collection<? extends Listener> listeners
+            final @NotNull Collection<? extends Listener> listeners
     ) {
-        for (final var listener : listeners) {
+        for (final Listener listener : listeners) {
             this.addListener(listener);
         }
     }
@@ -110,9 +116,9 @@ public interface Bus {
      * @param listeners the {@link Listener} collection.
      */
     default void removeListeners(
-            @NotNull Collection<? extends Listener> listeners
+            final @NotNull Collection<? extends Listener> listeners
     ) {
-        for (final var listener : listeners) {
+        for (final Listener listener : listeners) {
             this.removeListener(listener);
         }
     }

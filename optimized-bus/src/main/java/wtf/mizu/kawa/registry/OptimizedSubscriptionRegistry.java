@@ -6,7 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import wtf.mizu.kawa.api.Subscription;
 
 /**
- * TODO
+ * An optimized {@link SubscriptionRegistry}. Turns into a
+ * {@link SingletonSubscriptionRegistry} if only one item is left after
+ * removal, or into an {@link EmptySubscriptionRegistry} if no item is left ;
+ * meaning if a {@link SubscriptionRegistry} object is instance of
+ * {@link OptimizedSubscriptionRegistry}, it inevitably has at least 2 items.
  *
  * @param <T> the topic.
  * @author Shyrogan

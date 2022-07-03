@@ -6,7 +6,10 @@ import org.jetbrains.annotations.NotNull;
 import wtf.mizu.kawa.api.Subscription;
 
 /**
- * TODO
+ * A subscription registry that strictly holds a single non-null element. Turns
+ * into an {@link EmptySubscriptionRegistry} if the only present item is
+ * removed, or into an {@link OptimizedSubscriptionRegistry} if other items are
+ * added.
  *
  * @param <T> the topic.
  * @author Shyrogan

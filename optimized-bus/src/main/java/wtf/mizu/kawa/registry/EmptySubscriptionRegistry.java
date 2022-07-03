@@ -7,7 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import wtf.mizu.kawa.api.Subscription;
 
 /**
- * TODO
+ * An empty {@link SubscriptionRegistry}. Turns into a
+ * {@link SingletonSubscriptionRegistry} if an item gets added.
  *
  * @param <T> the topic.
  * @author Shyrogan

@@ -37,11 +37,8 @@ public interface Listener {
     default <T> List<Subscription<? extends T>> subscriptions(
             final @NotNull Class<T> tClass
     ) {
-        final List<Subscription<?>> value = subscriptions().get(tClass);
-
-        return value == null ?
-                null :
-                (List<Subscription<? extends T>>) (Object) value;
+        return (List<Subscription<? extends T>>)
+                (Object) subscriptions().get(tClass);
     }
 
     /**

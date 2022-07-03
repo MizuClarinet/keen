@@ -12,29 +12,30 @@ import wtf.mizu.kawa.registry.SubscriptionRegistry;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
- * TODO
+ * An optimized implementation of the Kawa {@link Bus} interface. Boxes a map
+ * of topics->{@link SubscriptionRegistry}, along with common {@link Bus}
+ * operations.
  *
  * @author Shyrogan
  * @author lambdagg
+ * @see SubscriptionRegistry
  * @since 0.0.1
  */
 @SuppressWarnings("unchecked")
 public class OptimizedBus implements Bus {
-    private final Map<Class<?>, SubscriptionRegistry<Object>> topicToSubscriptionsMap =
+    private final Map<Class<?>, SubscriptionRegistry<Object>> topicToSubscriptionRegistryMap =
             new HashMap<>();
 
     @Override
     public <T> void publish(
             final @NotNull T event
     ) {
-        final SubscriptionRegistry<Object> registry =
-                topicToSubscriptionsMap.get(event.getClass());
-
-        if (registry != null) {
-            registry.publish(event);
-        }
+        Optional.ofNullable(
+                topicToSubscriptionRegistryMap.get(event.getClass())
+        ).ifPresent((registry) -> registry.publish(event));
     }
 
     @Override
@@ -44,7 +45,7 @@ public class OptimizedBus implements Bus {
         final Subscription<Object> objSub =
                 (Subscription<Object>) subscription;
 
-        topicToSubscriptionsMap.compute(
+        topicToSubscriptionRegistryMap.compute(
                 subscription.topic(),
                 (_topic, registry) ->
                         registry == null ?
@@ -61,17 +62,15 @@ public class OptimizedBus implements Bus {
         final Subscription<Object> objSub =
                 (Subscription<Object>) subscription;
 
-        topicToSubscriptionsMap.computeIfPresent(
+        topicToSubscriptionRegistryMap.computeIfPresent(
                 subscription.topic(),
                 (_clazz, registry) -> {
                     final SubscriptionRegistry<Object> newRegistry =
                             registry.remove(objSub);
 
-                    if (newRegistry instanceof EmptySubscriptionRegistry<?>) {
-                        return null;
-                    }
-
-                    return newRegistry;
+                    return (newRegistry instanceof EmptySubscriptionRegistry<?>) ?
+                            null :
+                            newRegistry;
                 }
         );
     }
@@ -90,7 +89,7 @@ public class OptimizedBus implements Bus {
             final List<Subscription<Object>> subscriptions =
                     (List<Subscription<Object>>) (Object) entry.getValue();
 
-            topicToSubscriptionsMap.compute(
+            topicToSubscriptionRegistryMap.compute(
                     entry.getKey(),
                     (_topic, registry) -> {
                         if (registry != null) {

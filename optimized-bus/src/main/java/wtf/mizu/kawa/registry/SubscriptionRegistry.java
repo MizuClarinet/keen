@@ -6,7 +6,8 @@ import wtf.mizu.kawa.api.Subscription;
 import java.util.*;
 
 /**
- * TODO
+ * A {@link #subscriptions()} list holder. Able to publish any object of
+ * type {@link T} to all the present subscriptions.
  *
  * @param <T> the topic.
  * @author Shyrogan

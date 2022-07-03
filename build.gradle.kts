@@ -46,7 +46,7 @@ val buildRevision: String = grgit.log()[0].id ?: "dev"
 subprojects {
     apply {
         plugin("java-library")
-//        plugin("org.jetbrains.kotlin.jvm")
+        plugin("org.jetbrains.kotlin.jvm")
 
         plugin("org.jetbrains.dokka")
 
@@ -75,7 +75,12 @@ subprojects {
             useJUnitPlatform()
         }
 
-        findByName("kotlinCompile")?.configure<KotlinCompile> {
+        withType<JavaCompile> {
+            sourceCompatibility = "$JAVA_VERSION"
+            targetCompatibility = sourceCompatibility
+        }
+
+        withType<KotlinCompile> {
             kotlinOptions.jvmTarget = "$JAVA_VERSION"
         }
 

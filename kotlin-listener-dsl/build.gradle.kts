@@ -1,5 +1,3 @@
-apply(plugin = "org.jetbrains.kotlin.jvm")
-
 dependencies {
     implementation(project(":api"))
     Dependencies.kotlinModules.forEach {

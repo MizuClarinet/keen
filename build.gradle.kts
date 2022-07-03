@@ -75,13 +75,15 @@ subprojects {
             useJUnitPlatform()
         }
 
+        val actualJavaVersion = if (JAVA_VERSION == 8) "1.8" else "$JAVA_VERSION"
+
         withType<JavaCompile> {
-            sourceCompatibility = "$JAVA_VERSION"
-            targetCompatibility = sourceCompatibility
+            sourceCompatibility = actualJavaVersion
+            targetCompatibility = actualJavaVersion
         }
 
         withType<KotlinCompile> {
-            kotlinOptions.jvmTarget = "$JAVA_VERSION"
+            kotlinOptions.jvmTarget = actualJavaVersion
         }
 
         withType<DokkaTaskPartial>().configureEach {

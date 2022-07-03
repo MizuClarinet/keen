@@ -26,7 +26,9 @@ public class SingletonSubscriptionRegistry<T>
      */
     private List<Subscription<T>> fallbackList = null;
 
-    public SingletonSubscriptionRegistry(final @NotNull Subscription<T> singleton) {
+    public SingletonSubscriptionRegistry(
+            final @NotNull Subscription<T> singleton
+    ) {
         this.singleton = singleton;
     }
 

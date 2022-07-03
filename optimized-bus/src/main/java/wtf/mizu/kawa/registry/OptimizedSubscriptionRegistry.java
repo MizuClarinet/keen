@@ -13,7 +13,8 @@ import wtf.mizu.kawa.api.Subscription;
  * @author lambdagg
  * @since 0.0.1
  */
-public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T> {
+public class OptimizedSubscriptionRegistry<T>
+        implements SubscriptionRegistry<T> {
     private final @NotNull List<Subscription<T>> subscriptions;
 
     public OptimizedSubscriptionRegistry(
@@ -29,7 +30,9 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
     }
 
     @Override
-    public @NotNull SubscriptionRegistry<T> add(final @NotNull Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> add(
+            final @NotNull Subscription<T> subscription
+    ) {
         if (!subscriptions.contains(subscription)) {
             subscriptions.add(subscription);
             Collections.sort(subscriptions);
@@ -39,7 +42,9 @@ public class OptimizedSubscriptionRegistry<T> implements SubscriptionRegistry<T>
     }
 
     @Override
-    public @NotNull SubscriptionRegistry<T> remove(final @NotNull Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> remove(
+            final @NotNull Subscription<T> subscription
+    ) {
         subscriptions.remove(subscription);
 
         if (subscriptions.size() == 1) {

@@ -21,12 +21,16 @@ public class EmptySubscriptionRegistry<T> implements SubscriptionRegistry<T> {
     }
 
     @Override
-    public @NotNull SubscriptionRegistry<T> add(final @NotNull Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> add(
+            final @NotNull Subscription<T> subscription
+    ) {
         return new SingletonSubscriptionRegistry<>(subscription);
     }
 
     @Override
-    public @NotNull SubscriptionRegistry<T> remove(final @NotNull Subscription<T> subscription) {
+    public @NotNull SubscriptionRegistry<T> remove(
+            final @NotNull Subscription<T> subscription
+    ) {
         return this;
     }
 

@@ -37,24 +37,19 @@ public class OptimizedBus implements Bus {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T> void addSubscription(
             final @NotNull Subscription<T> subscription
     ) {
-        final Class<T> topic = subscription.topic();
-        final SubscriptionRegistry<Object> registry =
-                topicToSubscriptionsMap.get(topic);
+        final Subscription<Object> objSub =
+                (Subscription<Object>) subscription;
 
-        // TODO maybe we can use compute functions there?
-
-        topicToSubscriptionsMap.put(
-                topic,
-                registry == null ?
-                        new SingletonSubscriptionRegistry<>(
-                                (Subscription<Object>) subscription
-                        ) :
-                        registry.add((Subscription<Object>) subscription)
+        topicToSubscriptionsMap.compute(
+                subscription.topic(),
+                (_topic, registry) ->
+                        registry == null ?
+                                new SingletonSubscriptionRegistry<>(objSub) :
+                                registry.add(objSub)
         );
     }
 
@@ -63,20 +58,22 @@ public class OptimizedBus implements Bus {
     public <T> void removeSubscription(
             final @NotNull Subscription<T> subscription
     ) {
-        final Class<T> topic = subscription.topic();
-        final SubscriptionRegistry<Object> registry =
-                topicToSubscriptionsMap.get(topic);
+        final Subscription<Object> objSub =
+                (Subscription<Object>) subscription;
 
-        if (registry != null) {
-            final SubscriptionRegistry<Object> newRegistry =
-                    registry.remove((Subscription<Object>) subscription);
+        topicToSubscriptionsMap.computeIfPresent(
+                subscription.topic(),
+                (_clazz, registry) -> {
+                    final SubscriptionRegistry<Object> newRegistry =
+                            registry.remove(objSub);
 
-            if (newRegistry instanceof EmptySubscriptionRegistry<?>) {
-                topicToSubscriptionsMap.remove(topic);
-            }
+                    if (newRegistry instanceof EmptySubscriptionRegistry<?>) {
+                        return null;
+                    }
 
-            topicToSubscriptionsMap.put(topic, newRegistry);
-        }
+                    return newRegistry;
+                }
+        );
     }
 
     /**
@@ -90,29 +87,24 @@ public class OptimizedBus implements Bus {
     ) {
         for (final Map.Entry<Class<?>, List<Subscription<?>>> entry :
                 listener.subscriptions().entrySet()) {
-            final Class<?> topic = entry.getKey();
             final List<Subscription<Object>> subscriptions =
                     (List<Subscription<Object>>) (Object) entry.getValue();
 
-            final SubscriptionRegistry<Object> registry =
-                    topicToSubscriptionsMap.get(topic);
+            topicToSubscriptionsMap.compute(
+                    entry.getKey(),
+                    (_topic, registry) -> {
+                        if (registry != null) {
+                            return registry.addAll(subscriptions);
+                        }
 
-            if (registry == null) {
-                topicToSubscriptionsMap.put(
-                        topic,
-                        entry.getValue().size() == 1 ?
+                        return subscriptions.size() == 1 ?
                                 new SingletonSubscriptionRegistry<>(
                                         subscriptions.get(0)
                                 ) :
-                                new OptimizedSubscriptionRegistry<>(subscriptions)
-                );
-
-                return;
-            }
-
-            topicToSubscriptionsMap.put(
-                    topic,
-                    registry.addAll(subscriptions)
+                                new OptimizedSubscriptionRegistry<>(
+                                        subscriptions
+                                );
+                    }
             );
         }
     }

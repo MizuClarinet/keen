@@ -11,7 +11,7 @@ object Coordinates {
     const val mainGitBranch = "main"
 
     const val group = "wtf.mizu.kawa"
-    const val version = "0.3.1"
+    const val version = "0.3.2"
 }
 
 object Pom {

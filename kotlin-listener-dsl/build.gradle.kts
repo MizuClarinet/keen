@@ -1,9 +1,9 @@
-plugins {
-    kotlin("jvm") version "1.7.0"
-}
+apply(plugin = "org.jetbrains.kotlin.jvm")
 
 dependencies {
     implementation(project(":api"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0")
+    Dependencies.kotlinModules.forEach {
+        implementation("org.jetbrains.kotlin:kotlin-$it:${Dependencies.KOTLIN}")
+    }
     testImplementation(project(":optimized-bus"))
 }

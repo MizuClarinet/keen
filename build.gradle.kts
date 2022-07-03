@@ -1,52 +1,245 @@
+import java.net.URL
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    `java-library`
-    `maven-publish`
-    signing
-    id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
+    with(Plugins) {
+        id("org.ajoberstar.grgit") version GRGIT
+
+        kotlin("jvm") version KOTLIN apply false
+
+        id("org.jetbrains.dokka") version DOKKA
+
+        signing
+        `maven-publish`
+        id("io.github.gradle-nexus.publish-plugin") version NEXUS
+    }
 }
 
 allprojects {
-    group = "wtf.mizu.kawa"
-    version = "0.3.1"
-}
-
-subprojects {
-    apply(plugin = "maven-publish")
-    apply(plugin = "signing")
-    apply(plugin = "java-library")
+    with(Coordinates) {
+        project.group = group
+        project.version = version
+    }
 
     repositories {
+        mavenLocal()
         mavenCentral()
     }
+}
 
-    java {
-        withSourcesJar()
-        withJavadocJar()
+// Normalizing project version
+val prettyProjectVersion = rootProject.version.toString().run {
+    Regex("(\\d+\\.\\d+\\.\\d+).*").matchEntire(this)
+        ?.run { groupValues[1] }
+        ?: throw Error(
+            "Version '$this' does not match version pattern, e.g. 1.0.0-QUALIFIER"
+        )
+}
+
+// The latest commit ID
+val buildRevision: String = grgit.log()[0].id ?: "dev"
+
+subprojects {
+    apply {
+        plugin("java-library")
+//        plugin("org.jetbrains.kotlin.jvm")
+
+        plugin("org.jetbrains.dokka")
+
+        plugin("signing")
+        plugin("maven-publish")
     }
+
+    val sourceSets = project.extensions.getByType<SourceSetContainer>()
 
     dependencies {
-        compileOnly("org.jetbrains:annotations:23.0.0")
-        testCompileOnly("org.jetbrains:annotations:23.0.0")
+        val compileOnly by configurations
+        val testCompileOnly by configurations
+        val testImplementation by configurations
 
-        testImplementation(platform("org.junit:junit-bom:5.8.2"))
-        testImplementation("org.junit.jupiter:junit-jupiter")
+        with (Dependencies) {
+            compileOnly("org.jetbrains:annotations:$JETBRAINS_ANNOTATIONS")
+            testCompileOnly("org.jetbrains:annotations:$JETBRAINS_ANNOTATIONS")
+
+            testImplementation(platform("org.junit:junit-bom:$JUNIT"))
+            testImplementation("org.junit.jupiter:junit-jupiter")
+        }
     }
 
-    tasks.test {
-        useJUnitPlatform()
+    tasks {
+        withType<Test> {
+            useJUnitPlatform()
+        }
+
+        findByName("kotlinCompile")?.configure<KotlinCompile> {
+            kotlinOptions.jvmTarget = "$JAVA_VERSION"
+        }
+
+        withType<DokkaTaskPartial>().configureEach {
+            dokkaSourceSets.configureEach {
+                displayName.set("${Coordinates.name}/${project.name} on ${Coordinates.gitHost}")
+
+                skipDeprecated.set(false)
+                includeNonPublic.set(false)
+                skipEmptyPackages.set(true)
+                reportUndocumented.set(true)
+                suppressObviousFunctions.set(true)
+
+                // Link the source to the documentation
+                sourceLink {
+                    localDirectory.set(file("src"))
+                    remoteUrl.set(URL("${Coordinates.gitUrl}/tree/${Coordinates.mainGitBranch}/${project.name}/src"))
+                }
+
+                /**
+                 * @see config.Dokka.externalDocumentations
+                 */
+                config.Dokka.externalDocumentations.forEach {
+                    externalDocumentationLink { url.set(URL(it)) }
+                }
+            }
+        }
+
+        withType<Jar> {
+            archiveBaseName.set("${rootProject.name}.${project.name}")
+
+            val buildTimeAndDate = OffsetDateTime.now()
+            val buildDate = DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate)
+            val buildTime = DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate)
+
+            val javaVersion = System.getProperty("java.version")
+            val javaVendor = System.getProperty("java.vendor")
+            val javaVmVersion = System.getProperty("java.vm.version")
+
+            with(Coordinates) {
+                manifest.attributes(
+                    "Name" to group.replace(".", "/") + "/" + project.name + "/",
+
+                    "Created-By" to "$javaVersion ($javaVendor $javaVmVersion)",
+                    "Build-Date" to buildDate,
+                    "Build-Time" to buildTime,
+                    "Build-Revision" to buildRevision,
+
+                    "Specification-Title" to "bus-${project.name}",
+                    "Specification-Version" to prettyProjectVersion,
+                    "Specification-Vendor" to vendor,
+
+                    "Implementation-Title" to "$name-${project.name}",
+                    "Implementation-Version" to buildRevision,
+                    "Implementation-Vendor" to vendor,
+
+                    "Bundle-Name" to "$name-${project.name}",
+                    "Bundle-DocURL" to gitUrl,
+                    "Bundle-Vendor" to vendor,
+                    "Bundle-SymbolicName" to "$group.${project.name}",
+                )
+            }
+
+            from("LICENSE")
+        }
+
+        // Source artifact, including everything the 'main' does but not compiled.
+        create("sourcesJar", Jar::class) {
+            group = "build"
+            archiveClassifier.set("sources")
+
+            from(sourceSets["main"].allSource)
+
+            from("LICENSE")
+        }
+
+        // The Javadoc artifact, containing the Dokka output and the LICENSE file.
+        create("javadocJar", Jar::class) {
+            group = "build"
+            archiveClassifier.set("javadoc")
+
+            val dokkaHtml by getting
+            dependsOn(dokkaHtml)
+
+            from(dokkaHtml)
+            from("LICENSE")
+        }
     }
 
     publishing.publications {
         create("mavenJava", MavenPublication::class.java) {
             from(components["java"])
+
             groupId = project.group.toString()
             version = project.version.toString()
+
+            with(Coordinates) {
+                pom {
+                    name.set(name)
+                    description.set(this@with.description)
+                    url.set(gitUrl)
+
+                    with(Pom) {
+                        licenses {
+                            licenses.forEach {
+                                license {
+                                    name.set(it.name)
+                                    url.set(it.url)
+                                    distribution.set(it.distribution)
+                                }
+                            }
+                        }
+
+                        developers {
+                            developers.forEach {
+                                developer {
+                                    id.set(it.id)
+                                    name.set(it.name)
+                                }
+                            }
+                        }
+                    }
+
+                    scm {
+                        connection.set("scm:git:git://$gitHost/$repoId.git")
+                        developerConnection.set(
+                            "scm:git:ssh://$gitHost/$repoId.git"
+                        )
+                        url.set(gitUrl)
+                    }
+                }
+            }
 
             signing {
                 isRequired = project.properties["signing.keyId"] != null
                 sign(this@create)
             }
         }
+    }
+}
+
+afterEvaluate {
+    tasks.dokkaHtmlMultiModule {
+        val moduleFile = File(
+            projectDir,
+            "MODULE.temp.${java.util.UUID.randomUUID()}.md"
+        )
+
+        // In order to have a description on the rendered docs, we have to have
+        // a file with the # Module thingy in it. That's what we're
+        // automagically creating and deleting here.
+        run {
+            doFirst {
+                moduleFile.deleteOnExit()
+                moduleFile.writeText(
+                    "# ${Coordinates.name}\n${Coordinates.description}"
+                )
+            }
+
+            doLast { moduleFile.delete() }
+        }
+
+        moduleName.set(Coordinates.name)
+        includes.from(moduleFile.path)
     }
 }
 

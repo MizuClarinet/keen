@@ -1,8 +1,8 @@
 const val JAVA_VERSION: Int = 8
 
 object Coordinates {
-    const val name = "kawa"
-    const val description = "Open-source, powerful and modular Kotlin-enhanced event bus for the JVM."
+    const val name = "Kawa"
+    const val description = "An open-source, powerful and modular Kotlin-enhanced event bus library for the JVM."
     const val vendor = "Mizu Software"
 
     const val gitHost = "github.com"

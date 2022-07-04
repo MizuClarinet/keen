@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
+import org.jetbrains.dokka.gradle.DokkaTask
 import java.net.URL
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -87,8 +89,12 @@ subprojects {
         }
 
         withType<DokkaTaskPartial>().configureEach {
+            moduleName.set(project.name)
+
             dokkaSourceSets.configureEach {
-                displayName.set("${Coordinates.name}/${project.name} on ${Coordinates.gitHost}")
+                includes.from(projectDir.resolve("README.md"))
+
+                displayName.set("$moduleName on ${Coordinates.gitHost}")
 
                 skipDeprecated.set(false)
                 includeNonPublic.set(false)
@@ -99,7 +105,11 @@ subprojects {
                 // Link the source to the documentation
                 sourceLink {
                     localDirectory.set(file("src"))
-                    remoteUrl.set(URL("${Coordinates.gitUrl}/tree/${Coordinates.mainGitBranch}/${project.name}/src"))
+                    remoteUrl.set(
+                        URL(
+                            "${Coordinates.gitUrl}/tree/${Coordinates.mainGitBranch}/${project.name}/src"
+                        )
+                    )
                 }
 
                 /**
@@ -109,6 +119,10 @@ subprojects {
                     externalDocumentationLink { url.set(URL(it)) }
                 }
             }
+        }
+
+        withType<DokkaTask>().configureEach {
+            moduleName.set("${Coordinates.name}-${project.name}")
         }
 
         withType<Jar> {
@@ -224,36 +238,26 @@ subprojects {
     }
 }
 
-afterEvaluate {
-    tasks.dokkaHtmlMultiModule {
-        val moduleFile = File(
-            projectDir,
-            "MODULE.temp.${java.util.UUID.randomUUID()}.md"
-        )
-
-        // In order to have a description on the rendered docs, we have to have
-        // a file with the # Module thingy in it. That's what we're
-        // automagically creating and deleting here.
-        run {
-            doFirst {
-                moduleFile.deleteOnExit()
-                moduleFile.writeText(
-                    "# ${Coordinates.name}\n${Coordinates.description}"
-                )
-            }
-
-            doLast { moduleFile.delete() }
-        }
-
-        moduleName.set(Coordinates.name)
-        includes.from(moduleFile.path)
+tasks.withType<DokkaMultiModuleTask>().configureEach {
+    val moduleFile = File(
+        temporaryDir,
+        "MODULE.${java.util.UUID.randomUUID()}.md"
+    ).apply {
+        writeText("# ${Coordinates.name} by ${Coordinates.vendor}\n${Coordinates.description}\n<a href=\"${Coordinates.gitUrl}\">Source</a>")
     }
+
+    moduleName.set(Coordinates.name)
+    includes.from(moduleFile)
 }
 
 // Configure publishing to Maven Central
 nexusPublishing.repositories.sonatype {
     nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-    snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+    snapshotRepositoryUrl.set(
+        uri(
+            "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+        )
+    )
 
     // Skip this step if environment variables NEXUS_USERNAME or NEXUS_PASSWORD aren't set.
     username.set(properties["NEXUS_USERNAME"] as? String ?: return@sonatype)

@@ -2,6 +2,7 @@
 
 An open-source, powerful and modular [Kotlin]-enhanced event bus for the [JVM].
 
+
 ## Importing
 
 You can import [Kawa][project-url] from [Maven Central][mvnc] by adding it to your dependencies block.
@@ -46,6 +47,7 @@ dependencies {
     </dependency>
 </dependencies>
 ```
+
 
 ## Usage
 

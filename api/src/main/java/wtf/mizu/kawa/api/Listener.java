@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
- * Associates event topics to a {@link Subscription} sorted set.
+ * Associates event topics to their {@link Subscription} {@link Collection}.
  * <p>
  * Supposed to only be for registration purposes, they can be seen as
  * "subscription holders" and are not to be stored by buses.
@@ -25,7 +25,7 @@ public interface Listener {
      * @return a {@link Map} that associates each topic type to its
      * {@link Subscription} {@link List}.
      */
-    @NotNull Map<Class<?>, List<Subscription<?>>> subscriptions();
+    @NotNull Map<Class<?>, Collection<Subscription<?>>> subscriptions();
 
     /**
      * Gets a subscription list for the given class.
@@ -34,10 +34,10 @@ public interface Listener {
      * @param tClass the class of the type of subscription to search for.
      * @return the subscription list for Ts, or `null` if none found.
      */
-    default <T> List<Subscription<? extends T>> subscriptions(
+    default <T> Collection<Subscription<? extends T>> subscriptions(
             final @NotNull Class<T> tClass
     ) {
-        return (List<Subscription<? extends T>>)
+        return (Collection<Subscription<? extends T>>)
                 (Object) subscriptions().get(tClass);
     }
 
@@ -47,10 +47,10 @@ public interface Listener {
      * @param <T>   the type of subscription to search for.
      * @param dummy hacky way to remove the need of giving a class. No argument
      *              is really needed.
-     * @return the subscription list for Ts, or `null` if none found.
+     * @return the subscription collection for Ts, or `null` if none found.
      * @see #subscriptions(Class)
      */
-    default <T> List<Subscription<? extends T>> subscriptions(
+    default <T> Collection<Subscription<? extends T>> subscriptions(
             final T... dummy
     ) {
         return subscriptions(

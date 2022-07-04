@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Subscription<T> extends Comparable<Subscription<T>> {
     /**
-     * The topic getter.
+     * The main topic getter.
      *
      * @return the main topic.
      */
@@ -29,7 +29,8 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
     /**
      * The priority getter.
      * <p>
-     * By default, the lowest priority means the consumer is called later.
+     * By default, the lower the priority means the later the consumer is
+     * called.
      *
      * @return an integer used to sort subscriptions and invoke them in a
      * specific order when an event is published.

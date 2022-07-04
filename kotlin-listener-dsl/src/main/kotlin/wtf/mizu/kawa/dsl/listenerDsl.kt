@@ -22,7 +22,7 @@ open class KListener : Listener {
 /**
  * Creates an inlined listener defined by the given block.
  *
- * @property block the block to apply to the [KListener].
+ * @param block the block to apply to the newly created [KListener].
  *
  * @return the newly created [KListener].
  */
@@ -32,9 +32,9 @@ inline fun listener(crossinline block: KListener.() -> Unit) =
 /**
  * Creates an inlined event subscription defined by the given block.
  *
- * @param T the main topic.
- * @property priority the subscription priority. Defaults to 0.
- * @property block the block to use as the [Subscription] consumer.
+ * @property T the main topic.
+ * @param priority the subscription priority. Defaults to 0.
+ * @param block the block to use as the [Subscription] consumer.
  *
  * @return the newly created subscription.
  */

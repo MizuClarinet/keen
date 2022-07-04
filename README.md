@@ -112,4 +112,4 @@ This project is licensed under [the AGPLv3-only License][license].
 
 [badge-mvnc-dsl]: https://maven-badges.herokuapp.com/maven-central/wtf.mizu.kawa/kotlin-listener-dsl/badge.svg "DSL Maven Central badge"
 
-[badge-ci]: https://github.com/MizuSoftware/kawa/actions/workflows/build.yml/badge.svg?branch=main "CI badge"
+[badge-ci]: https://github.com/MizuSoftware/kawa/actions/workflows/build.yml/badge.svg?branch=main "Continous integration badge"

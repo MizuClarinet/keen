@@ -94,7 +94,7 @@ subprojects {
             dokkaSourceSets.configureEach {
                 includes.from(projectDir.resolve("README.md"))
 
-                displayName.set("${moduleName.get()} on ${Coordinates.gitHost}")
+                displayName.set("${Coordinates.name}/${moduleName.get()} on ${Coordinates.gitHost}")
 
                 skipDeprecated.set(false)
                 includeNonPublic.set(false)

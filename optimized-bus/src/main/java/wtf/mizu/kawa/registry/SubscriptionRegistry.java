@@ -17,7 +17,7 @@ import java.util.*;
 @SuppressWarnings("unused")
 public interface SubscriptionRegistry<T> {
     /**
-     * The subscription set getter.
+     * The subscription list getter.
      *
      * @return an immutable {@link List} that returns all of the
      * {@link Subscription}s in this {@link SubscriptionRegistry}.

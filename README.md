@@ -15,11 +15,11 @@ repositories {
 }
 
 dependencies {
-    implementation("wtf.mizu.kawa:api:0.3.2")
-    implementation("wtf.mizu.kawa:optimized-bus:0.3.2")
+    implementation("wtf.mizu.kawa:api:0.3.4")
+    implementation("wtf.mizu.kawa:optimized-bus:0.3.4")
 
     // If you're using Kotlin:
-    implementation("wtf.mizu.kawa:kotlin-listener-dsl:0.3.2")
+    implementation("wtf.mizu.kawa:kotlin-listener-dsl:0.3.4")
 }
 ```
 
@@ -30,20 +30,20 @@ dependencies {
     <dependency>
         <groupId>wtf.mizu.kawa</groupId>
         <artifactId>api</artifactId>
-        <version>0.3.2</version>
+        <version>0.3.4</version>
     </dependency>
 
     <dependency>
         <groupId>wtf.mizu.kawa</groupId>
         <artifactId>optimized-bus</artifactId>
-        <version>0.3.2</version>
+        <version>0.3.4</version>
     </dependency>
 
     <!-- If you're using Kotlin: -->
     <dependency>
         <groupId>wtf.mizu.kawa</groupId>
         <artifactId>kotlin-listener-dsl</artifactId>
-        <version>0.3.2</version>
+        <version>0.3.4</version>
     </dependency>
 </dependencies>
 ```

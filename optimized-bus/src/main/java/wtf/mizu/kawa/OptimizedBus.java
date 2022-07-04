@@ -9,10 +9,7 @@ import wtf.mizu.kawa.registry.OptimizedSubscriptionRegistry;
 import wtf.mizu.kawa.registry.SingletonSubscriptionRegistry;
 import wtf.mizu.kawa.registry.SubscriptionRegistry;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * An optimized implementation of the Kawa {@link Bus} interface. Boxes a map
@@ -84,10 +81,10 @@ public class OptimizedBus implements Bus {
     public void addListener(
             final @NotNull Listener listener
     ) {
-        for (final Map.Entry<Class<?>, List<Subscription<?>>> entry :
+        for (final Map.Entry<Class<?>, Collection<Subscription<?>>> entry :
                 listener.subscriptions().entrySet()) {
-            final List<Subscription<Object>> subscriptions =
-                    (List<Subscription<Object>>) (Object) entry.getValue();
+            final Collection<Subscription<Object>> subscriptions =
+                    (Collection<Subscription<Object>>) (Object) entry.getValue();
 
             topicToSubscriptionRegistryMap.compute(
                     entry.getKey(),
@@ -98,10 +95,10 @@ public class OptimizedBus implements Bus {
 
                         return subscriptions.size() == 1 ?
                                 new SingletonSubscriptionRegistry<>(
-                                        subscriptions.get(0)
+                                        subscriptions.iterator().next()
                                 ) :
                                 new OptimizedSubscriptionRegistry<>(
-                                        subscriptions
+                                        new ArrayList<>(subscriptions)
                                 );
                     }
             );

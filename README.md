@@ -1,6 +1,6 @@
 # Kawa 🚀 [![CI][badge-ci]][ci] [![badge-mvnc-api] ![badge-mvnc-optimized-bus] ![badge-mvnc-dsl]][project-mvnc]
 
-An [open-source][project-url], powerful and modular [Kotlin]-enhanced event bus for the [JVM].
+An [open-source][project-url], powerful and modular [Kotlin]-enhanced event bus library for the [JVM].
 
 
 ## Importing

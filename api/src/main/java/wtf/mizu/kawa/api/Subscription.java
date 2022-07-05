@@ -27,7 +27,7 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
     @NotNull Class<T> topic();
 
     /**
-     * The priority getter.
+     * The priority getter, defaulting to {@link Priority#DEFAULT}.
      * <p>
      * By default, the lower the priority means the later the consumer is
      * called.
@@ -36,7 +36,7 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
      * specific order when an event is published.
      */
     default int priority() {
-        return 0;
+        return Priority.DEFAULT;
     }
 
     /**

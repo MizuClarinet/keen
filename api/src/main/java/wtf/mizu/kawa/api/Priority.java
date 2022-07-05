@@ -11,19 +11,23 @@ public class Priority {
      * The lowest priority, will be consumed after everyone else.
      */
     public static final int LOWEST = -1000;
+
     /**
      * A low priority, will be consumed a bit later than most other
      * subscriptions.
      */
     public static final int LOW = -500;
+
     /**
      * The default priority.
      */
     public static final int DEFAULT = 0;
+
     /**
      * A high priority, will be consumed earlier than most other subscriptions.
      */
     public static final int HIGH = 500;
+
     /**
      * The highest priority, will ensure its subscription to be consumed first.
      */

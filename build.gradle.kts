@@ -124,6 +124,8 @@ subprojects {
                     "Implementation-Vendor" to vendor,
 
                     "Bundle-Name" to "$name-${project.name}",
+                    // the README.md file always contains the module description on its 3rd line.
+                    "Bundle-Description" to projectDir.resolve("README.md").readLines()[2],
                     "Bundle-DocURL" to gitUrl,
                     "Bundle-Vendor" to vendor,
                     "Bundle-SymbolicName" to "$group.${project.name}",

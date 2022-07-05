@@ -40,7 +40,7 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
     }
 
     /**
-     * Consumes the given event.
+     * Consumes the provided event.
      *
      * @param event the event to be consumed.
      */
@@ -48,7 +48,7 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
     }
 
     /**
-     * Compares the given {@link Subscription} to this instance.
+     * Compares the provided {@link Subscription} to this instance.
      *
      * @param subscription the subscription to be compared.
      * @return an integer, as defined by {@link Comparable#compareTo(Object)}.

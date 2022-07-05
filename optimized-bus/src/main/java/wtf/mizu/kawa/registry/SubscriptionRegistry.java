@@ -27,7 +27,8 @@ public interface SubscriptionRegistry<T> {
     @NotNull List<Subscription<T>> subscriptions();
 
     /**
-     * Adds the given {@link Subscription} to this {@link SubscriptionRegistry}.
+     * Adds the provided {@link Subscription} to this
+     * {@link SubscriptionRegistry}.
      *
      * @param subscription the subscription.
      * @return the new subscription registry.
@@ -37,7 +38,7 @@ public interface SubscriptionRegistry<T> {
     );
 
     /**
-     * Removes the given {@link Subscription} from this
+     * Removes the provided {@link Subscription} from this
      * {@link SubscriptionRegistry}.
      *
      * @param subscription the subscription.
@@ -48,7 +49,7 @@ public interface SubscriptionRegistry<T> {
     );
 
     /**
-     * Adds the given {@link Subscription} collection to this
+     * Adds the provided {@link Subscription} collection to this
      * {@link SubscriptionRegistry}.
      *
      * @param subscriptions the subscription collection.
@@ -77,7 +78,7 @@ public interface SubscriptionRegistry<T> {
     }
 
     /**
-     * Removes given collection of {@link Subscription} to this
+     * Removes the provided {@link Subscription} {@link Collection} from this
      * {@link SubscriptionRegistry}.
      *
      * @param subscriptions the subscription.
@@ -101,7 +102,7 @@ public interface SubscriptionRegistry<T> {
     }
 
     /**
-     * Publishes the given event to its {@link Subscription}s.
+     * Publishes the provided event to its {@link Subscription}s.
      *
      * @param event the event to be published.
      */

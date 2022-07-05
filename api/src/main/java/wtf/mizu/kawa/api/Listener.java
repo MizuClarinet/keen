@@ -28,7 +28,7 @@ public interface Listener {
     @NotNull Map<Class<?>, Collection<Subscription<?>>> subscriptions();
 
     /**
-     * Gets a subscription list for the given class.
+     * Gets a subscription list for the provided class.
      *
      * @param <T>    the type of subscription to search for.
      * @param tClass the class of the type of subscription to search for.

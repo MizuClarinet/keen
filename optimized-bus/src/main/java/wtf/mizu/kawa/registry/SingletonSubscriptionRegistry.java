@@ -35,6 +35,7 @@ public class SingletonSubscriptionRegistry<T>
         this.singleton = singleton;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull List<Subscription<T>> subscriptions() {
         return fallbackList == null ?
@@ -42,6 +43,7 @@ public class SingletonSubscriptionRegistry<T>
                 fallbackList;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull SubscriptionRegistry<T> add(
             final @NotNull Subscription<T> subscription
@@ -53,6 +55,7 @@ public class SingletonSubscriptionRegistry<T>
         return new OptimizedSubscriptionRegistry<>(list);
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull SubscriptionRegistry<T> remove(
             final @NotNull Subscription<T> subscription
@@ -64,6 +67,7 @@ public class SingletonSubscriptionRegistry<T>
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void publish(final @NotNull T event) {
         singleton.consume(event);

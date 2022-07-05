@@ -16,11 +16,13 @@ import wtf.mizu.kawa.api.Subscription;
  * @since 0.0.1
  */
 public class EmptySubscriptionRegistry<T> implements SubscriptionRegistry<T> {
+    /** {@inheritDoc} */
     @Override
     public @NotNull List<Subscription<T>> subscriptions() {
         return Collections.emptyList();
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull SubscriptionRegistry<T> add(
             final @NotNull Subscription<T> subscription
@@ -28,6 +30,7 @@ public class EmptySubscriptionRegistry<T> implements SubscriptionRegistry<T> {
         return new SingletonSubscriptionRegistry<>(subscription);
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull SubscriptionRegistry<T> remove(
             final @NotNull Subscription<T> subscription
@@ -35,6 +38,7 @@ public class EmptySubscriptionRegistry<T> implements SubscriptionRegistry<T> {
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void publish(final @NotNull T event) {
         // No operations need to be done as this registry is *meant* to be

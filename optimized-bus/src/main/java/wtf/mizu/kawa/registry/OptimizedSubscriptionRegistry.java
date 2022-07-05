@@ -28,11 +28,13 @@ public class OptimizedSubscriptionRegistry<T>
         this.subscriptions = subscriptions;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull List<Subscription<T>> subscriptions() {
         return Collections.unmodifiableList(subscriptions);
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull SubscriptionRegistry<T> add(
             final @NotNull Subscription<T> subscription
@@ -45,6 +47,7 @@ public class OptimizedSubscriptionRegistry<T>
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull SubscriptionRegistry<T> remove(
             final @NotNull Subscription<T> subscription
@@ -58,6 +61,7 @@ public class OptimizedSubscriptionRegistry<T>
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void publish(final @NotNull T event) {
         if (subscriptions instanceof RandomAccess) {

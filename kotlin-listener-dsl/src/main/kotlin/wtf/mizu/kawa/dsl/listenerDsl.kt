@@ -40,7 +40,7 @@ inline fun listener(crossinline block: KListener.() -> Unit) =
  * @return the newly created subscription.
  */
 inline fun <reified T : Any> Listener.on(
-    priority: Int = Priority.DEFAULT,
+    priority: Short = Priority.DEFAULT,
     crossinline block: (T) -> Unit,
 ) = object : Subscription<T> {
     override fun topic() = T::class.java

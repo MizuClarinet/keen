@@ -1,9 +1,12 @@
 package wtf.mizu.kawa.registry;
 
-import java.util.*;
-
 import org.jetbrains.annotations.NotNull;
 import wtf.mizu.kawa.api.Subscription;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.RandomAccess;
 
 /**
  * An optimized {@link SubscriptionRegistry}. Turns into a
@@ -17,6 +20,7 @@ import wtf.mizu.kawa.api.Subscription;
  * @author lambdagg
  * @since 0.0.1
  */
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class OptimizedSubscriptionRegistry<T>
         implements SubscriptionRegistry<T> {
     private final @NotNull List<Subscription<T>> subscriptions;

@@ -40,10 +40,10 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
      * By default, the lower the priority means the later the consumer is
      * called.
      *
-     * @return an integer used to sort subscriptions and invoke them in a
+     * @return a {@code short} used to sort subscriptions and invoke them in a
      * specific order when an event is published.
      */
-    default int priority() {
+    default short priority() {
         return Priority.DEFAULT;
     }
 

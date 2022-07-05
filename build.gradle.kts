@@ -204,7 +204,7 @@ subprojects {
 
             with(Coordinates) {
                 pom {
-                    name.set(name)
+                    name.set(this@with.name)
                     description.set(this@with.description)
                     url.set(gitUrl)
 

@@ -224,6 +224,7 @@ subprojects {
                                 developer {
                                     id.set(it.id)
                                     name.set(it.name)
+                                    email.set(it.email)
                                 }
                             }
                         }

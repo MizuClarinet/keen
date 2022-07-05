@@ -1,9 +1,9 @@
-import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
-import org.jetbrains.dokka.gradle.DokkaTask
 import java.net.URL
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
+import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -72,13 +72,16 @@ subprojects {
         }
     }
 
+    val actualJavaVersion = if (JAVA_VERSION <= 10) "1.$JAVA_VERSION" else "$JAVA_VERSION"
+
+    configure<JavaPluginExtension> {
+        sourceCompatibility = JavaVersion.valueOf(
+            "VERSION_${actualJavaVersion.replace(".", "_")}"
+        )
+        targetCompatibility = sourceCompatibility
+    }
+
     tasks {
-        withType<Test> {
-            useJUnitPlatform()
-        }
-
-        val actualJavaVersion = if (JAVA_VERSION == 8) "1.8" else "$JAVA_VERSION"
-
         withType<JavaCompile> {
             sourceCompatibility = actualJavaVersion
             targetCompatibility = actualJavaVersion
@@ -88,41 +91,8 @@ subprojects {
             kotlinOptions.jvmTarget = actualJavaVersion
         }
 
-        withType<DokkaTaskPartial>().configureEach {
-            moduleName.set(project.name)
-
-            dokkaSourceSets.configureEach {
-                includes.from(projectDir.resolve("README.md"))
-
-                displayName.set("${Coordinates.name}/${moduleName.get()} on ${Coordinates.gitHost}")
-
-                skipDeprecated.set(false)
-                includeNonPublic.set(false)
-                skipEmptyPackages.set(true)
-                reportUndocumented.set(true)
-                suppressObviousFunctions.set(true)
-
-                // Link the source to the documentation
-                sourceLink {
-                    localDirectory.set(file("src"))
-                    remoteUrl.set(
-                        URL(
-                            "${Coordinates.gitUrl}/tree/${Coordinates.mainGitBranch}/${project.name}/src"
-                        )
-                    )
-                }
-
-                /**
-                 * @see config.Dokka.externalDocumentations
-                 */
-                config.Dokka.externalDocumentations.forEach {
-                    externalDocumentationLink { url.set(URL(it)) }
-                }
-            }
-        }
-
-        withType<DokkaTask>().configureEach {
-            moduleName.set("${Coordinates.name}-${project.name}")
+        withType<Test> {
+            useJUnitPlatform()
         }
 
         withType<Jar> {
@@ -171,6 +141,43 @@ subprojects {
             from(sourceSets["main"].allSource)
 
             from("LICENSE")
+        }
+
+        withType<DokkaTask>().configureEach {
+            moduleName.set("${Coordinates.name}-${project.name}")
+        }
+
+        withType<DokkaTaskPartial>().configureEach {
+            moduleName.set(project.name)
+
+            dokkaSourceSets.configureEach {
+                includes.from(projectDir.resolve("README.md"))
+
+                displayName.set("${Coordinates.name}/${moduleName.get()} on ${Coordinates.gitHost}")
+
+                skipDeprecated.set(false)
+                includeNonPublic.set(false)
+                skipEmptyPackages.set(true)
+                reportUndocumented.set(true)
+                suppressObviousFunctions.set(true)
+
+                // Link the source to the documentation
+                sourceLink {
+                    localDirectory.set(file("src"))
+                    remoteUrl.set(
+                        URL(
+                            "${Coordinates.gitUrl}/tree/${Coordinates.mainGitBranch}/${project.name}/src"
+                        )
+                    )
+                }
+
+                /**
+                 * @see config.Dokka.externalDocumentations
+                 */
+                config.Dokka.externalDocumentations.forEach {
+                    externalDocumentationLink { url.set(URL(it)) }
+                }
+            }
         }
 
         // The Javadoc artifact, containing the Dokka output and the LICENSE file.

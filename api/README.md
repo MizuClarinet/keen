@@ -1,8 +1,8 @@
 # Module api
 
-Kawa's base interfaces.
+Kawa's base abstraction layer.
 
 
 # Package wtf.mizu.kawa.api
 
-The base interfaces.
+The base abstraction layer.

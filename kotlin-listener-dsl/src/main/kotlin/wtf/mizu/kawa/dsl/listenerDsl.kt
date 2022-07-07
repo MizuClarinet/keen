@@ -1,6 +1,7 @@
 package wtf.mizu.kawa.dsl
 
 import wtf.mizu.kawa.api.Listener
+import wtf.mizu.kawa.api.Priority
 import wtf.mizu.kawa.api.Subscription
 
 /**
@@ -33,13 +34,13 @@ inline fun listener(crossinline block: KListener.() -> Unit) =
  * Creates an inlined event subscription defined by the provided block.
  *
  * @property T the main topic.
- * @param priority the subscription priority. Defaults to 0.
+ * @param priority the subscription priority. Defaults to [Priority.DEFAULT].
  * @param block the block to use as the [Subscription] consumer.
  *
  * @return the newly created subscription.
  */
 inline fun <reified T : Any> Listener.on(
-    priority: Int = 0,
+    priority: Short = Priority.DEFAULT,
     crossinline block: (T) -> Unit,
 ) = object : Subscription<T> {
     override fun topic() = T::class.java

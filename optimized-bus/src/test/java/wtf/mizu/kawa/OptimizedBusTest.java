@@ -8,7 +8,7 @@ import wtf.mizu.kawa.api.Subscription;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests the {@link OptimizedBus} class.
@@ -42,11 +42,6 @@ public class OptimizedBusTest {
         @Override
         public @NotNull Class<Integer> topic() {
             return Integer.class;
-        }
-
-        @Override
-        public int priority() {
-            return 0;
         }
 
         @Override

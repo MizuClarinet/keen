@@ -3,6 +3,8 @@ package wtf.mizu.kawa.api;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * Publishes events and allows subscriptions to consume them.
@@ -34,7 +36,7 @@ public interface Bus {
      * @param <T>          the main topic.
      * @param subscription the {@link Subscription} to register.
      */
-    <T> void addSubscription(final @NotNull Subscription<T> subscription);
+    <T> CompletableFuture<Void> register(final @NotNull Subscription<T> subscription);
 
     /**
      * Unregisters the provided {@link Subscription} from this bus.
@@ -42,7 +44,7 @@ public interface Bus {
      * @param <T>          the main topic.
      * @param subscription the {@link Subscription} to unregister.
      */
-    <T> void removeSubscription(final @NotNull Subscription<T> subscription);
+    <T> CompletableFuture<Void> unregister(final @NotNull Subscription<T> subscription);
 
     /**
      * Registers the provided {@link Subscription} {@link Collection} to this
@@ -51,12 +53,14 @@ public interface Bus {
      * @param subscriptions the {@link Subscription} {@link Collection} to
      *                      register.
      */
-    default void addSubscriptions(
+    default CompletableFuture<Void> registerAll(
             final @NotNull Collection<? extends Subscription<?>> subscriptions
     ) {
-        for (final Subscription<?> subscription : subscriptions) {
-            this.addSubscription(subscription);
-        }
+        return CompletableFuture.allOf(subscriptions.stream()
+                .map(this::register)
+                .collect(Collectors.toList())
+                .toArray(new CompletableFuture[] {})
+        );
     }
 
     /**
@@ -66,12 +70,13 @@ public interface Bus {
      * @param subscriptions the {@link Subscription} {@link Collection} to
      *                      unregister.
      */
-    default void removeSubscriptions(
+    default CompletableFuture<Void> unregisterAll(
             final @NotNull Collection<? extends Subscription<?>> subscriptions
     ) {
-        for (final Subscription<?> subscription : subscriptions) {
-            this.removeSubscription(subscription);
-        }
+        return CompletableFuture.allOf(subscriptions.stream()
+                .map(this::register)
+                .toArray(CompletableFuture[]::new)
+        );
     }
 
     /**
@@ -79,13 +84,11 @@ public interface Bus {
      *
      * @param listener the {@link Listener} to register.
      */
-    default void addListener(final @NotNull Listener listener) {
-        for (
-                final Collection<Subscription<?>> subscriptions :
-                listener.subscriptions().values()
-        ) {
-            this.addSubscriptions(subscriptions);
-        }
+    default CompletableFuture<Void> registerListener(final @NotNull Listener listener) {
+        return CompletableFuture.allOf(listener.subscriptions().values().stream()
+                .map(this::registerAll)
+                .toArray(CompletableFuture[]::new)
+        );
     }
 
     /**
@@ -93,26 +96,26 @@ public interface Bus {
      *
      * @param listener the {@link Listener} to unregister.
      */
-    default void removeListener(final @NotNull Listener listener) {
-        for (
-                final Collection<Subscription<?>> subscriptions :
-                listener.subscriptions().values()
-        ) {
-            this.removeSubscriptions(subscriptions);
-        }
+    default CompletableFuture<Void> unregisterListener(final @NotNull Listener listener) {
+        return CompletableFuture.allOf(listener.subscriptions().values().stream()
+                .map(this::unregisterAll)
+                .toArray(CompletableFuture[]::new)
+        );
     }
 
     /**
      * Registers the provided {@link Listener} {@link Collection} to this bus.
      *
      * @param listeners the {@link Listener} {@link Collection} to register.
+     * @return
      */
-    default void addListeners(
+    default CompletableFuture<Void> registerListeners(
             final @NotNull Collection<? extends Listener> listeners
     ) {
-        for (final Listener listener : listeners) {
-            this.addListener(listener);
-        }
+        return CompletableFuture.allOf(listeners.stream()
+                .map(this::registerListener)
+                .toArray(CompletableFuture[]::new)
+        );
     }
 
     /**
@@ -120,11 +123,12 @@ public interface Bus {
      *
      * @param listeners the {@link Listener} {@link Collection} to unregister.
      */
-    default void removeListeners(
+    default CompletableFuture<Void> unregisterListeners(
             final @NotNull Collection<? extends Listener> listeners
     ) {
-        for (final Listener listener : listeners) {
-            this.removeListener(listener);
-        }
+        return CompletableFuture.allOf(listeners.stream()
+                .map(this::unregisterListener)
+                .toArray(CompletableFuture[]::new)
+        );
     }
 }

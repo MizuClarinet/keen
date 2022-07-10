@@ -2,6 +2,8 @@ package wtf.mizu.kawa.api;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
 /**
  * Consumes event instances.
  * <p>
@@ -27,12 +29,9 @@ public interface Subscription<T> extends Comparable<Subscription<T>> {
     @NotNull Class<T> topic();
 
     /**
-     * Consumes the provided event.
-     *
-     * @param event the event to be consumed.
+     * The consumer that consumes the event.
      */
-    default void consume(final @NotNull T event) {
-    }
+    Consumer<T> consumer();
 
     /**
      * The priority getter, defaulting to {@link Priority#DEFAULT}.

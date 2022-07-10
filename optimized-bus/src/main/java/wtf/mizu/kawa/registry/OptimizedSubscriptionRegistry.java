@@ -2,11 +2,10 @@ package wtf.mizu.kawa.registry;
 
 import org.jetbrains.annotations.NotNull;
 import wtf.mizu.kawa.api.Subscription;
+import wtf.mizu.kawa.util.ListIterationUtil;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.RandomAccess;
 
 /**
  * An optimized {@link SubscriptionRegistry}. Turns into a
@@ -20,7 +19,6 @@ import java.util.RandomAccess;
  * @author lambdagg
  * @since 0.0.1
  */
-@SuppressWarnings("ForLoopReplaceableByForEach")
 public class OptimizedSubscriptionRegistry<T>
         implements SubscriptionRegistry<T> {
     private final @NotNull List<Subscription<T>> subscriptions;
@@ -32,50 +30,53 @@ public class OptimizedSubscriptionRegistry<T>
         this.subscriptions = subscriptions;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @NotNull List<Subscription<T>> subscriptions() {
-        return Collections.unmodifiableList(subscriptions);
+        return Collections.unmodifiableList(this.subscriptions);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @NotNull SubscriptionRegistry<T> add(
             final @NotNull Subscription<T> subscription
     ) {
-        if (!subscriptions.contains(subscription)) {
-            subscriptions.add(subscription);
-            Collections.sort(subscriptions);
+        if (!this.subscriptions.contains(subscription)) {
+            this.subscriptions.add(subscription);
+            Collections.sort(this.subscriptions);
         }
 
         return this;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @NotNull SubscriptionRegistry<T> remove(
             final @NotNull Subscription<T> subscription
     ) {
-        subscriptions.remove(subscription);
+        this.subscriptions.remove(subscription);
 
-        if (subscriptions.size() == 1) {
-            return new SingletonSubscriptionRegistry<>(subscriptions.get(0));
-        }
-
-        return this;
+        return this.subscriptions.size() != 1 ?
+                this :
+                new SingletonSubscriptionRegistry<>(
+                        this.subscriptions.get(0)
+                );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void publish(final @NotNull T event) {
-        if (subscriptions instanceof RandomAccess) {
-            for (int i = 0; i < subscriptions.size(); i++) {
-                subscriptions.get(i).consume(event);
-            }
-        } else {
-            for (final Iterator<Subscription<T>> i = subscriptions.iterator(); i.hasNext(); ) {
-                i.next().consume(event);
-            }
-        }
+        ListIterationUtil.optimizedIterationThrough(
+                subscriptions,
+                (sub) -> sub.consume(event)
+        );
     }
 }

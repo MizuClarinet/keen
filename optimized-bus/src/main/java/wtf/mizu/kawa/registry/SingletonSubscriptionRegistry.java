@@ -39,7 +39,7 @@ public class SingletonSubscriptionRegistry<T>
     @Override
     public @NotNull List<Subscription<T>> subscriptions() {
         return fallbackList == null ?
-                fallbackList = Collections.singletonList(singleton) :
+                fallbackList = Collections.singletonList(this.singleton) :
                 fallbackList;
     }
 
@@ -49,7 +49,7 @@ public class SingletonSubscriptionRegistry<T>
             final @NotNull Subscription<T> subscription
     ) {
         final List<Subscription<T>> list = new ArrayList<>();
-        list.add(singleton);
+        list.add(this.singleton);
         list.add(subscription);
 
         return new OptimizedSubscriptionRegistry<>(list);
@@ -60,7 +60,7 @@ public class SingletonSubscriptionRegistry<T>
     public @NotNull SubscriptionRegistry<T> remove(
             final @NotNull Subscription<T> subscription
     ) {
-        if (singleton.equals(subscription)) {
+        if (this.singleton.equals(subscription)) {
             return new EmptySubscriptionRegistry<>();
         }
 
@@ -70,6 +70,6 @@ public class SingletonSubscriptionRegistry<T>
     /** {@inheritDoc} */
     @Override
     public void publish(final @NotNull T event) {
-        singleton.consume(event);
+        this.singleton.consume(event);
     }
 }

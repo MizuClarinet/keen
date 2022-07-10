@@ -24,15 +24,15 @@ class KListenerTest {
     private var i = 0
 
     private val listener = listener {
-        on<Int> { i += it }
+        on<Int> { this@KListenerTest.i += it }
     }
 
     @Test
     fun creationTest() {
-        bus.addListener(listener)
-        bus.publish(EXPECTED_VALUE)
-        bus.removeListener(listener)
-        bus.publish(EXPECTED_VALUE)
-        assertEquals(EXPECTED_VALUE, i)
+        this.bus.addListener(this.listener)
+        this.bus.publish(EXPECTED_VALUE)
+        this.bus.removeListener(this.listener)
+        this.bus.publish(EXPECTED_VALUE)
+        assertEquals(EXPECTED_VALUE, this.i)
     }
 }

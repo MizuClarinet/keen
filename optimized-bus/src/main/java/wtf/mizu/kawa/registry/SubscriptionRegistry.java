@@ -58,7 +58,7 @@ public interface SubscriptionRegistry<T> {
     default @NotNull SubscriptionRegistry<T> addAll(
             final @NotNull Collection<? extends Subscription<T>> subscriptions
     ) {
-        final int newSize = subscriptions().size() + subscriptions.size();
+        final int newSize = this.subscriptions().size() + subscriptions.size();
 
         if (newSize == 0) {
             return new EmptySubscriptionRegistry<>();
@@ -67,12 +67,14 @@ public interface SubscriptionRegistry<T> {
         if (newSize == 1) {
             return new SingletonSubscriptionRegistry<>(
                     subscriptions.isEmpty() ?
-                            subscriptions().get(0) :
+                            this.subscriptions().get(0) :
                             subscriptions.iterator().next()
             );
         }
 
-        final List<Subscription<T>> list = new ArrayList<>(subscriptions());
+        final List<Subscription<T>> list = new ArrayList<>(
+                this.subscriptions()
+        );
         list.addAll(subscriptions);
         return new OptimizedSubscriptionRegistry<>(list);
     }
@@ -87,7 +89,9 @@ public interface SubscriptionRegistry<T> {
     default @NotNull SubscriptionRegistry<T> removeAll(
             final @NotNull Collection<? extends Subscription<T>> subscriptions
     ) {
-        final List<Subscription<T>> list = new ArrayList<>(subscriptions());
+        final List<Subscription<T>> list = new ArrayList<>(
+                this.subscriptions()
+        );
         list.removeAll(subscriptions);
 
         if (list.size() == 0) {

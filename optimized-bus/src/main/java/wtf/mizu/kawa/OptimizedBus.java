@@ -31,9 +31,12 @@ public class OptimizedBus implements Bus {
     public <T> void publish(
             final @NotNull T event
     ) {
-        Optional.ofNullable(
-                topicToSubscriptionRegistryMap.get(event.getClass())
-        ).ifPresent((registry) -> registry.publish(event));
+        final SubscriptionRegistry<Object> registry =
+                this.topicToSubscriptionRegistryMap.get(event.getClass());
+
+        if (registry != null) {
+            registry.publish(event);
+        }
     }
 
     /** {@inheritDoc} */
@@ -44,7 +47,7 @@ public class OptimizedBus implements Bus {
         final Subscription<Object> objSub =
                 (Subscription<Object>) subscription;
 
-        topicToSubscriptionRegistryMap.compute(
+        this.topicToSubscriptionRegistryMap.compute(
                 subscription.topic(),
                 (_topic, registry) ->
                         registry == null ?
@@ -54,7 +57,6 @@ public class OptimizedBus implements Bus {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
     @Override
     public <T> void removeSubscription(
             final @NotNull Subscription<T> subscription
@@ -62,7 +64,7 @@ public class OptimizedBus implements Bus {
         final Subscription<Object> objSub =
                 (Subscription<Object>) subscription;
 
-        topicToSubscriptionRegistryMap.computeIfPresent(
+        this.topicToSubscriptionRegistryMap.computeIfPresent(
                 subscription.topic(),
                 (_clazz, registry) -> {
                     final SubscriptionRegistry<Object> newRegistry =
@@ -85,7 +87,7 @@ public class OptimizedBus implements Bus {
             final Collection<Subscription<Object>> subscriptions =
                     (Collection<Subscription<Object>>) (Object) entry.getValue();
 
-            topicToSubscriptionRegistryMap.compute(
+            this.topicToSubscriptionRegistryMap.compute(
                     entry.getKey(),
                     (_topic, registry) -> {
                         if (registry != null) {

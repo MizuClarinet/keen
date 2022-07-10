@@ -17,7 +17,7 @@ open class KListener : Listener {
     private val subscriptions =
         mutableMapOf<Class<*>, List<Subscription<*>>>()
 
-    override fun subscriptions() = subscriptions
+    override fun subscriptions() = this.subscriptions
 }
 
 /**
@@ -49,7 +49,7 @@ inline fun <reified T : Any> Listener.on(
 
     override fun consume(event: T) = block(event)
 }.also { subscription ->
-    subscriptions()
+    this.subscriptions()
         .getOrPut(subscription.topic()) { mutableListOf() }
         .add(subscription)
 }

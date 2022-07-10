@@ -38,7 +38,7 @@ public interface Listener {
             final @NotNull Class<T> tClass
     ) {
         return (Collection<Subscription<? extends T>>)
-                (Object) subscriptions().get(tClass);
+                (Object) this.subscriptions().get(tClass);
     }
 
     /**
@@ -53,7 +53,7 @@ public interface Listener {
     default <T> Collection<Subscription<? extends T>> subscriptions(
             final T... dummy
     ) {
-        return subscriptions(
+        return this.subscriptions(
                 (Class<T>) dummy.getClass().getComponentType()
         );
     }

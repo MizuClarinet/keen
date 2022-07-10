@@ -1,0 +1,11 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:api
+wtf.mizu.kawa.api
+module:kotlin-listener-dsl
+wtf.mizu.kawa.dsl
+module:optimized-bus
+wtf.mizu.kawa
+wtf.mizu.kawa.registry
+wtf.mizu.kawa.util

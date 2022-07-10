@@ -58,8 +58,7 @@ public interface Bus {
     ) {
         return CompletableFuture.allOf(subscriptions.stream()
                 .map(this::register)
-                .collect(Collectors.toList())
-                .toArray(new CompletableFuture[] {})
+                .toArray(CompletableFuture[]::new)
         );
     }
 

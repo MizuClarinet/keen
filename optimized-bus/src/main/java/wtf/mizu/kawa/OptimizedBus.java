@@ -10,6 +10,7 @@ import wtf.mizu.kawa.registry.SingletonSubscriptionRegistry;
 import wtf.mizu.kawa.registry.SubscriptionRegistry;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * An optimized implementation of the Kawa {@link Bus} interface. Boxes a map
@@ -41,7 +42,7 @@ public class OptimizedBus implements Bus {
 
     /** {@inheritDoc} */
     @Override
-    public <T> void addSubscription(
+    public <T> CompletableFuture<Void> register(
             final @NotNull Subscription<T> subscription
     ) {
         final Subscription<Object> objSub =
@@ -58,7 +59,7 @@ public class OptimizedBus implements Bus {
 
     /** {@inheritDoc} */
     @Override
-    public <T> void removeSubscription(
+    public <T> CompletableFuture<Void> unregister(
             final @NotNull Subscription<T> subscription
     ) {
         final Subscription<Object> objSub =
@@ -79,7 +80,7 @@ public class OptimizedBus implements Bus {
 
     /** {@inheritDoc} */
     @Override
-    public void addListener(
+    public CompletableFuture<Void> registerListener(
             final @NotNull Listener listener
     ) {
         for (final Map.Entry<Class<?>, Collection<Subscription<?>>> entry :

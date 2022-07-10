@@ -6,6 +6,7 @@ import wtf.mizu.kawa.util.ListIterationUtil;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * An optimized {@link SubscriptionRegistry}. Turns into a
@@ -22,12 +23,17 @@ import java.util.List;
 public class OptimizedSubscriptionRegistry<T>
         implements SubscriptionRegistry<T> {
     private final @NotNull List<Subscription<T>> subscriptions;
+    private final Consumer<T>[] consumers;
 
+    @SuppressWarnings("unchecked")
     public OptimizedSubscriptionRegistry(
             final @NotNull List<Subscription<T>> subscriptions
     ) {
         // TODO maybe we want to synchronize stuff here?
         this.subscriptions = subscriptions;
+        this.consumers = (Consumer<T>[]) subscriptions.stream()
+                .map(Subscription::consumer)
+                .toArray(Consumer[]::new);
     }
 
     /**
@@ -74,9 +80,9 @@ public class OptimizedSubscriptionRegistry<T>
      */
     @Override
     public void publish(final @NotNull T event) {
-        ListIterationUtil.optimizedIterationThrough(
-                subscriptions,
-                (sub) -> sub.consume(event)
-        );
+        final int size = consumers.length;
+        for (int i = 0; i < size; i++) {
+            consumers[i].accept(event);
+        }
     }
 }

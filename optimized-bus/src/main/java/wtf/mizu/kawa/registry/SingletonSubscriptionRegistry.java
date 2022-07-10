@@ -1,6 +1,7 @@
 package wtf.mizu.kawa.registry;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 import wtf.mizu.kawa.api.Subscription;
@@ -21,26 +22,20 @@ public class SingletonSubscriptionRegistry<T>
     /**
      * The singleton {@link Subscription} this registry is using.
      */
-    private final @NotNull Subscription<T> singleton;
-
-    /**
-     * The fallback singleton {@link List}, only initialized when calling
-     * {@link #subscriptions()}.
-     */
-    private List<Subscription<T>> fallbackList = null;
+    private final @NotNull List<Subscription<T>> subscriptions;
+    private final @NotNull Consumer<T> consumer;
 
     public SingletonSubscriptionRegistry(
             final @NotNull Subscription<T> singleton
     ) {
-        this.singleton = singleton;
+        this.subscriptions = Collections.singletonList(singleton);
+        this.consumer = singleton.consumer();
     }
 
     /** {@inheritDoc} */
     @Override
     public @NotNull List<Subscription<T>> subscriptions() {
-        return fallbackList == null ?
-                fallbackList = Collections.singletonList(this.singleton) :
-                fallbackList;
+        return subscriptions;
     }
 
     /** {@inheritDoc} */
@@ -49,7 +44,7 @@ public class SingletonSubscriptionRegistry<T>
             final @NotNull Subscription<T> subscription
     ) {
         final List<Subscription<T>> list = new ArrayList<>();
-        list.add(this.singleton);
+        list.add(subscriptions.get(0));
         list.add(subscription);
 
         return new OptimizedSubscriptionRegistry<>(list);
@@ -60,7 +55,7 @@ public class SingletonSubscriptionRegistry<T>
     public @NotNull SubscriptionRegistry<T> remove(
             final @NotNull Subscription<T> subscription
     ) {
-        if (this.singleton.equals(subscription)) {
+        if (this.subscriptions.get(0).equals(subscription)) {
             return new EmptySubscriptionRegistry<>();
         }
 
@@ -70,6 +65,6 @@ public class SingletonSubscriptionRegistry<T>
     /** {@inheritDoc} */
     @Override
     public void publish(final @NotNull T event) {
-        this.singleton.consume(event);
+        this.consumer.accept(event);
     }
 }

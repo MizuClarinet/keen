@@ -10,8 +10,8 @@ object Coordinates {
     const val gitUrl = "https://$gitHost/$repoId"
     const val mainGitBranch = "main"
 
-    const val group = "wtf.mizu.kawa"
-    const val version = "0.3.4"
+    const val group = "wtf.mizu"
+    const val version = "0.3.4"  // 0.4.0
 }
 
 object Pom {

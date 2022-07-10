@@ -15,11 +15,11 @@ repositories {
 }
 
 dependencies {
-    implementation("wtf.mizu.kawa:api:0.3.4")
-    implementation("wtf.mizu.kawa:optimized-bus:0.3.4")
+    implementation("wtf.mizu:kawa:0.4.0:api")
+    implementation("wtf.mizu:kawa:0.4.0:optimized-bus")
 
     // If you're using Kotlin:
-    implementation("wtf.mizu.kawa:kotlin-listener-dsl:0.3.4")
+    implementation("wtf.mizu:kawa:0.4.0:kotlin-listener-dsl")
 }
 ```
 
@@ -28,22 +28,25 @@ dependencies {
 ```xml
 <dependencies>
     <dependency>
-        <groupId>wtf.mizu.kawa</groupId>
-        <artifactId>api</artifactId>
-        <version>0.3.4</version>
+        <groupId>wtf.mizu</groupId>
+        <artifactId>kawa</artifactId>
+        <version>0.4.0</version>
+        <classifier>api</classifier>
     </dependency>
 
     <dependency>
-        <groupId>wtf.mizu.kawa</groupId>
-        <artifactId>optimized-bus</artifactId>
-        <version>0.3.4</version>
+        <groupId>wtf.mizu</groupId>
+        <artifactId>kawa</artifactId>
+        <version>0.4.0</version>
+        <classifier>optimized-bus</classifier>
     </dependency>
 
     <!-- If you're using Kotlin: -->
     <dependency>
-        <groupId>wtf.mizu.kawa</groupId>
-        <artifactId>kotlin-listener-dsl</artifactId>
-        <version>0.3.4</version>
+        <groupId>wtf.mizu</groupId>
+        <artifactId>kawa</artifactId>
+        <version>0.4.0</version>
+        <classifier>kotlin-listener-dsl</classifier>
     </dependency>
 </dependencies>
 ```

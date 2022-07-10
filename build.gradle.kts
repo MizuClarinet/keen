@@ -1,6 +1,7 @@
 import java.net.URL
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -45,15 +46,14 @@ val prettyProjectVersion = rootProject.version.toString().run {
 // The latest commit ID
 val buildRevision: String = grgit.log()[0].id ?: "dev"
 
+val artifactTasks = mutableListOf<Task>()
+
 subprojects {
     apply {
         plugin("java-library")
         plugin("org.jetbrains.kotlin.jvm")
 
         plugin("org.jetbrains.dokka")
-
-        plugin("signing")
-        plugin("maven-publish")
     }
 
     val sourceSets = project.extensions.getByType<SourceSetContainer>()
@@ -96,7 +96,8 @@ subprojects {
         }
 
         withType<Jar> {
-            archiveBaseName.set("${rootProject.name}.${project.name}")
+            archiveBaseName.set(rootProject.name)
+            archiveClassifier.set(project.name)
 
             val buildTimeAndDate = OffsetDateTime.now()
             val buildDate = DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate)
@@ -138,7 +139,7 @@ subprojects {
         // Source artifact, including everything the 'main' does but not compiled.
         create("sourcesJar", Jar::class) {
             group = "build"
-            archiveClassifier.set("sources")
+            archiveClassifier.set("${project.name}.sources")
 
             from(sourceSets["main"].allSource)
 
@@ -185,7 +186,7 @@ subprojects {
         // The Javadoc artifact, containing the Dokka output and the LICENSE file.
         create("javadocJar", Jar::class) {
             group = "build"
-            archiveClassifier.set("javadoc")
+            archiveClassifier.set("${project.name}.javadoc")
 
             val dokkaHtml by getting
             dependsOn(dokkaHtml)
@@ -195,69 +196,78 @@ subprojects {
         }
     }
 
-    publishing.publications {
-        create("mavenJava", MavenPublication::class.java) {
-            from(components["java"])
-
-            groupId = project.group.toString()
-            version = project.version.toString()
-
-            with(Coordinates) {
-                pom {
-                    name.set(this@with.name)
-                    description.set(this@with.description)
-                    url.set(gitUrl)
-
-                    with(Pom) {
-                        licenses {
-                            licenses.forEach {
-                                license {
-                                    name.set(it.name)
-                                    url.set(it.url)
-                                    distribution.set(it.distribution)
-                                }
-                            }
-                        }
-
-                        developers {
-                            developers.forEach {
-                                developer {
-                                    id.set(it.id)
-                                    name.set(it.name)
-                                    email.set(it.email)
-                                }
-                            }
-                        }
-                    }
-
-                    scm {
-                        connection.set("scm:git:git://$gitHost/$repoId.git")
-                        developerConnection.set(
-                            "scm:git:ssh://$gitHost/$repoId.git"
-                        )
-                        url.set(gitUrl)
-                    }
-                }
-            }
-
-            signing {
-                isRequired = project.properties["signing.keyId"] != null
-                sign(this@create)
-            }
-        }
+    arrayOf("jar", "javadocJar", "sourcesJar").forEach {
+        artifactTasks.add(tasks[it])
     }
+}
+
+artifacts {
+    artifactTasks.forEach(::archives)
 }
 
 tasks.withType<DokkaMultiModuleTask>().configureEach {
     val moduleFile = File(
         temporaryDir,
-        "MODULE.${java.util.UUID.randomUUID()}.md"
+        "MODULE.${UUID.randomUUID()}.md"
     ).apply {
         writeText("# ${Coordinates.name} by ${Coordinates.vendor}\n${Coordinates.description}\n<a href=\"${Coordinates.gitUrl}\">Source</a>")
     }
 
     moduleName.set(Coordinates.name)
     includes.from(moduleFile)
+}
+
+// Configure maven publication
+publishing.publications {
+    create("mavenJava", MavenPublication::class.java) {
+        artifactTasks.forEach(::artifact)
+
+        with(Coordinates) {
+            pom {
+                name.set(this@with.name)
+                description.set(this@with.description)
+                url.set(gitUrl)
+
+                with(Pom) {
+                    licenses {
+                        licenses.forEach {
+                            license {
+                                name.set(it.name)
+                                url.set(it.url)
+                                distribution.set(it.distribution)
+                            }
+                        }
+                    }
+
+                    developers {
+                        developers.forEach {
+                            developer {
+                                id.set(it.id)
+                                name.set(it.name)
+
+                                if (it.email != "<none>") {
+                                    email.set(it.email)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:git://$gitHost/$repoId.git")
+                    developerConnection.set(
+                        "scm:git:ssh://$gitHost/$repoId.git"
+                    )
+                    url.set(gitUrl)
+                }
+            }
+        }
+
+        signing {
+            isRequired = project.properties["signing.keyId"] != null
+            sign(this@create)
+        }
+    }
 }
 
 // Configure publishing to Maven Central

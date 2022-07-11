@@ -2,7 +2,6 @@ package wtf.mizu.kawa.registry;
 
 import org.jetbrains.annotations.NotNull;
 import wtf.mizu.kawa.api.Subscription;
-import wtf.mizu.kawa.util.ListIterationUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -78,10 +77,10 @@ public class OptimizedSubscriptionRegistry<T>
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("ForLoopReplaceableByForEach")
     @Override
     public void publish(final @NotNull T event) {
-        final int size = consumers.length;
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < consumers.length; i++) {
             consumers[i].accept(event);
         }
     }

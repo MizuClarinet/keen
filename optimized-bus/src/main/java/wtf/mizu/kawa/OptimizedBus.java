@@ -55,6 +55,9 @@ public class OptimizedBus implements Bus {
                                 new SingletonSubscriptionRegistry<>(objSub) :
                                 registry.add(objSub)
         );
+
+        /* TODO */
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -76,6 +79,9 @@ public class OptimizedBus implements Bus {
                             newRegistry;
                 }
         );
+
+        /* TODO */
+        return null;
     }
 
     /** {@inheritDoc} */
@@ -105,5 +111,8 @@ public class OptimizedBus implements Bus {
                     }
             );
         }
+
+        /* TODO */
+        return null;
     }
 }
